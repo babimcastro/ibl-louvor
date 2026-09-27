@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Louvor IBL — Igreja Batista Liberdade</title>
+<style>
+  :root{
+    --azul:#1e3a8a;--azul-claro:#2563eb;--azul-royal:#3b5bdb;--azul-escuro:#152a63;
+    --bg:#f4f6fb;--card:#ffffff;--borda:#e2e8f0;--texto:#1e293b;--suave:#64748b;
+    --verde:#16a34a;--vermelho:#dc2626;--amarelo:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--texto);line-height:1.5;padding-bottom:40px;}
+  header{background:linear-gradient(135deg,var(--azul-escuro),var(--azul-royal));color:#fff;padding:18px 16px;text-align:center;box-shadow:0 2px 12px rgba(21,42,99,.2);}
+  .logo-peixe{width:52px;height:auto;display:block;margin:0 auto 6px;}
+  header h1{font-size:1.25rem;font-weight:700;letter-spacing:.5px;}
+  header p{font-size:.82rem;opacity:.9;margin-top:2px;}
+
+  .container{max-width:900px;margin:0 auto;padding:0 12px;}
+
+  .quemsou{background:var(--card);border-radius:12px;padding:10px 12px;margin:14px 0;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .quemsou label{margin:0;white-space:nowrap;font-size:.82rem;}
+  .quemsou select{flex:1;}
+  .quemsou.alerta-eu{background:#fffbeb;border:1.5px solid var(--amarelo);}
+  .quemsou.alerta-eu .hint-eu{display:block;}
+  .hint-eu{display:none;font-size:.72rem;color:#92400e;font-weight:600;width:100%;margin-top:4px;}
+  .quemsou{flex-wrap:wrap;}
+  .selos{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 2px;}
+  .selo{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:12px;}
+  .selo-ok{background:#dcfce7;color:#15803d;}
+  .selo-pend{background:#fef3c7;color:#92400e;}
+  .selo-vazio{background:#f1f5f9;color:#94a3b8;}
+  .semana.proximo{border-left-color:var(--verde);box-shadow:0 2px 14px rgba(22,163,74,.18);}
+  .tag-proximo{background:var(--verde);color:#fff;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:12px;letter-spacing:.5px;}
+  .grupo-btns{margin-top:10px;}
+  .grupo-btns .rotulo-grupo{font-size:.7rem;color:var(--suave);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:6px 0 4px;}
+  .disp-nomes-escala{font-size:.78rem;color:#15803d;margin-top:4px;line-height:1.6;}
+  .contador-sel{font-size:.8rem;font-weight:700;color:var(--azul-royal);margin:4px 0 8px;}
+  .arquivo-toggle{text-align:center;margin:8px 0 16px;}
+
+  .abas{display:flex;gap:5px;margin:14px 0;background:var(--card);padding:5px;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:8px;z-index:20;}
+  .aba{flex:1;padding:11px 4px;border:none;background:transparent;border-radius:10px;font-size:.82rem;font-weight:600;color:var(--suave);cursor:pointer;transition:.2s;}
+  .aba.ativa{background:var(--azul-royal);color:#fff;box-shadow:0 2px 8px rgba(59,91,219,.35);}
+
+  .painel{display:none;animation:fade .3s;}
+  .painel.ativo{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.06);border:1px solid var(--borda);}
+  .card h2{font-size:1.02rem;color:var(--azul);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .card h3{font-size:.92rem;color:var(--texto);margin:14px 0 8px;}
+
+  label{display:block;font-size:.8rem;font-weight:600;color:var(--suave);margin:10px 0 4px;}
+  input,select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--borda);border-radius:10px;font-size:1rem;font-family:inherit;background:#fff;color:var(--texto);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul-royal);}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:.15s;text-decoration:none;}
+  .btn-primario{background:var(--azul-royal);color:#fff;}
+  .btn-primario:active{transform:scale(.97);}
+  .btn-secundario{background:#eef2ff;color:var(--azul-royal);}
+  .btn-perigo{background:#fef2f2;color:var(--vermelho);}
+  .btn-verde{background:#16a34a;color:#fff;}
+  .btn-mini{padding:7px 12px;font-size:.82rem;border-radius:8px;}
+  .btn-block{width:100%;}
+
+  .semana{border-left:4px solid var(--azul-royal);}
+  .semana-topo{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .data-badge{background:linear-gradient(135deg,var(--azul-royal),var(--azul-claro));color:#fff;padding:6px 12px;border-radius:20px;font-weight:700;font-size:.9rem;white-space:nowrap;}
+  .ministro-tag{background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:14px;font-size:.78rem;font-weight:600;}
+  .ministro-vazio{background:#f1f5f9;color:#94a3b8;padding:4px 10px;border-radius:14px;font-size:.78rem;font-weight:600;}
+
+  .lista-vaga{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed var(--borda);}
+  .lista-vaga:last-child{border-bottom:none;}
+  .funcao{font-size:.78rem;color:var(--suave);width:78px;flex-shrink:0;font-weight:600;}
+  .nome-pessoa{flex:1;font-size:.9rem;}
+  .vazio{color:#cbd5e1;font-style:italic;}
+
+  .contador{font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:12px;}
+  .cont-ok{background:#dcfce7;color:var(--verde);}
+  .cont-cheio{background:#fee2e2;color:var(--vermelho);}
+
+  .pill{display:inline-flex;align-items:center;gap:5px;background:#eef2ff;color:var(--azul-royal);padding:5px 10px;border-radius:16px;font-size:.82rem;margin:3px 4px 3px 0;font-weight:500;}
+
+  .musica-item{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--borda);border-radius:12px;margin-bottom:8px;background:#fafbff;}
+  .musica-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .musica-nome{font-weight:600;font-size:.93rem;flex:1;}
+  .musica-links{display:flex;gap:8px;flex-wrap:wrap;}
+  .link-tag{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;text-decoration:none;padding:5px 10px;border-radius:8px;font-weight:600;}
+  .link-yt{background:#fee2e2;color:#dc2626;}
+  .link-voz{background:#dbeafe;color:#2563eb;}
+  .link-drive{background:#dcfce7;color:#16a34a;}
+  .cat-badge{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle;}
+  .cat-Animada{background:#fef3c7;color:#92400e;}
+  .cat-Ceia{background:#f3e8ff;color:#7c3aed;}
+  .cat-Natal{background:#dcfce7;color:#15803d;}
+  .filtro-cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .filtro-cat{padding:6px 12px;border:1.5px solid var(--borda);border-radius:16px;background:#fff;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--suave);}
+  .filtro-cat.on{background:var(--azul-royal);color:#fff;border-color:var(--azul-royal);}
+
+  .busca{position:relative;margin-bottom:12px;}
+  .busca input{padding-left:38px;}
+  .busca::before{content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5;}
+
+  .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#1e40af;margin-bottom:12px;}
+  .aviso-topo{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;font-size:.78rem;color:#92400e;margin-bottom:12px;text-align:center;}
+
+  .vazio-estado{text-align:center;padding:24px;color:var(--suave);font-size:.9rem;}
+
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;align-items:flex-end;justify-content:center;}
+  .modal-bg.aberto{display:flex;}
+  #modalConfirmar.aberto{align-items:center;padding:16px;}
+  .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 28px;width:100%;max-width:900px;max-height:90vh;overflow-y:auto;animation:subir .25s;}
+  @keyframes subir{from{transform:translateY(100%);}to{transform:none;}}
+  .modal h2{margin-bottom:4px;}
+  .modal-fechar{float:right;background:none;border:none;font-size:1.6rem;color:var(--suave);cursor:pointer;line-height:1;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .chip{padding:8px 12px;border:1.5px solid var(--borda);border-radius:20px;background:#fff;font-size:.85rem;cursor:pointer;transition:.15s;user-select:none;}
+  .chip.sel{background:var(--azul-royal);color:#fff;border-color:var(--azul-royal);}
+  .chip.indisp{opacity:.4;text-decoration:line-through;}
+  .chip.disp-livre{border-color:#86efac;}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--azul-escuro);color:#fff;padding:12px 20px;border-radius:24px;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:200;transition:transform .3s;font-weight:500;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  .divisor{height:1px;background:var(--borda);margin:14px 0;}
+  .linha-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .sub{font-size:.78rem;color:var(--suave);}
+  details summary{cursor:pointer;font-weight:600;color:var(--azul-royal);font-size:.86rem;padding:6px 0;}
+
+  .disp-domingo{border:1px solid var(--borda);border-radius:12px;padding:12px;margin-bottom:10px;}
+  .disp-domingo.eu-posso{border-color:#86efac;background:#f0fdf4;}
+  .disp-linha{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .toggle-disp{display:flex;gap:6px;}
+  .btn-toggle{padding:8px 14px;border-radius:10px;border:1.5px solid var(--borda);background:#fff;font-weight:600;font-size:.85rem;cursor:pointer;}
+  .btn-toggle.sim-on{background:var(--verde);color:#fff;border-color:var(--verde);}
+  .btn-toggle.nao-on{background:var(--vermelho);color:#fff;border-color:var(--vermelho);}
+  .disp-contagem{font-size:.75rem;color:var(--suave);margin-top:6px;}
+  .disp-nomes{font-size:.78rem;color:var(--suave);margin-top:4px;line-height:1.6;}
+
+  .resumo-preview{background:#0b141a;color:#e9edef;border-radius:12px;padding:14px;font-size:.85rem;white-space:pre-wrap;font-family:monospace;line-height:1.6;margin:10px 0;max-height:340px;overflow-y:auto;}
+</style>
+<!-- ============================================================= -->
+<!--  FIREBASE — PREENCHA A CONFIGURAÇÃO ABAIXO (veja instruções)   -->
+<!--  Cole aqui o objeto firebaseConfig do seu projeto Firebase.    -->
+<!-- ============================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // >>> COLE SUA CONFIG DO FIREBASE AQUI <<<
+  const firebaseConfig = {
+    apiKey: "COLE_AQUI",
+    authDomain: "COLE_AQUI",
+    projectId: "COLE_AQUI",
+    storageBucket: "COLE_AQUI",
+    messagingSenderId: "COLE_AQUI",
+    appId: "COLE_AQUI"
+  };
+  // ------------------------------------------------------------------
+
+  const configOk = firebaseConfig.projectId && firebaseConfig.projectId!=="COLE_AQUI";
+  window.__FIREBASE_OK__ = configOk;
+  if(configOk){
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const ref = doc(db, "louvor", "ibl"); // coleção "louvor", documento "ibl"
+    // expõe funções que o app usa
+    window.fbCarregar = async ()=>{ const snap = await getDoc(ref); return snap.exists()? snap.data().payload : null; };
+    window.fbSalvar   = async (jsonStr)=>{ await setDoc(ref, { payload: jsonStr, atualizado: Date.now() }); };
+    window.fbOuvir    = (cb)=>{ onSnapshot(ref, (snap)=>{ if(snap.exists()) cb(snap.data().payload); }); };
+    window.dispatchEvent(new Event("firebase-pronto"));
+  }
+</script>
+</head>
+<body>
+
+<header>
+  <svg class="logo-peixe" viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b8def"/><stop offset="1" stop-color="#1a2f6b"/>
+    </linearGradient></defs>
+    <path d="M8 35 C 30 8, 78 8, 95 30 L 112 14 L 104 35 L 112 56 L 95 40 C 78 62, 30 62, 8 35 Z"
+      fill="none" stroke="url(#g)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+  <h1>Louvor IBL</h1>
+  <p>Igreja Batista Liberdade · Escala &amp; Repertório</p>
+</header>
+
+<div class="container">
+  <div class="aviso-topo">☁️ Tudo fica salvo e visível para todo o grupo.</div>
+  <div id="avisoConfig" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px 14px;font-size:.85rem;color:#991b1b;margin-bottom:12px">
+    ⚠️ <b>Configuração pendente.</b> Este app ainda não está conectado ao banco de dados. Nada será salvo até colar a configuração do Firebase no código (veja as instruções que acompanham o arquivo). Enquanto isso, você pode navegar, mas as alterações não serão compartilhadas.
+  </div>
+
+  <div class="quemsou" id="quemsouBox">
+    <label>👤 Sou:</label>
+    <select id="souEu" onchange="mudarEu()"><option value="">Selecione seu nome</option></select>
+    <span class="hint-eu">👉 Comece escolhendo seu nome para marcar disponibilidade.</span>
+  </div>
+
+  <div class="abas">
+    <button class="aba ativa" onclick="trocarAba('disp',this)">✋ Disponibilidade</button>
+    <button class="aba" onclick="trocarAba('escala',this)">📅 Escala</button>
+    <button class="aba" onclick="trocarAba('repo',this)">🎵 Repertório</button>
+    <button class="aba" onclick="trocarAba('pessoas',this)">👥 Equipe</button>
+  </div>
+
+  <!-- DISPONIBILIDADE -->
+  <div id="painel-disp" class="painel ativo">
+    <div class="info-box">Marque os domingos em que você <b>pode servir</b>. O Elias usa isso para montar a escala.</div>
+    <div class="card">
+      <h2>📆 Domingos abertos</h2>
+      <div id="listaDisp"></div>
+    </div>
+    <div class="card">
+      <h3>➕ Abrir uma data extra</h3>
+      <p class="sub">Os domingos do mês já são abertos automaticamente. Use isto só para um culto ou evento em outra data.</p>
+      <label>Data do culto</label>
+      <input type="date" id="novaDataDisp" onclick="this.min=new Date().toISOString().slice(0,10)">
+      <div style="height:10px"></div>
+      <button class="btn btn-secundario btn-block" onclick="abrirDomingo()">Abrir domingo</button>
+    </div>
+  </div>
+
+  <!-- ESCALA -->
+  <div id="painel-escala" class="painel">
+    <div class="info-box">Monte a escala escolhendo entre quem se disponibilizou. Cada domingo mostra o que já está pronto.</div>
+    <div class="filtro-cats" id="filtroDomingos">
+      <div class="filtro-cat on" data-fd="prox" onclick="setFiltroDomingo('prox')">⭐ Meu próximo domingo</div>
+      <div class="filtro-cat" data-fd="todos" onclick="setFiltroDomingo('todos')">📅 Todos os próximos</div>
+    </div>
+    <div id="listaSemanas"></div>
+    <div class="card vazio-estado" id="semDomingos" style="display:none">
+      Nenhum domingo aberto ainda.<br>Abra um na aba ✋ Disponibilidade.
+    </div>
+    <div class="arquivo-toggle">
+      <button class="btn btn-secundario btn-mini" id="btnArquivo" onclick="toggleArquivo()">🗄️ Ver domingos passados</button>
+    </div>
+    <div id="listaArquivo"></div>
+  </div>
+
+  <!-- REPERTÓRIO -->
+  <div id="painel-repo" class="painel">
+    <div class="card">
+      <h2>➕ Adicionar música ao repositório</h2>
+      <label>Nome da música</label>
+      <input type="text" id="mNome" placeholder="Ex: Bondade de Deus">
+      <label>Link da música (YouTube)</label>
+      <input type="url" id="mLink" placeholder="https://youtube.com/...">
+      <label>Link da divisão vocal (YouTube ou Drive) — opcional</label>
+      <input type="url" id="mVoz" placeholder="https://...">
+      <label>Solo / observação — opcional</label>
+      <input type="text" id="mSolo" placeholder="Ex: Luciana ou Maju (fem)">
+      <label>Categoria — opcional</label>
+      <select id="mCat">
+        <option value="">Nenhuma (comum)</option>
+        <option value="Animada">💃🕺 Animada</option>
+        <option value="Ceia/Páscoa">🍇🍞 Ceia/Páscoa</option>
+        <option value="Natal">🎄 Natal</option>
+      </select>
+      <div style="height:12px"></div>
+      <button class="btn btn-primario btn-block" onclick="addMusica()">Salvar música</button>
+    </div>
+    <div class="card">
+      <h2>🎵 Repositório <span id="contMusicas" class="sub"></span></h2>
+      <div class="busca"><input type="text" id="buscaMusica" placeholder="Buscar música..." oninput="renderMusicas()"></div>
+      <div class="filtro-cats" id="filtroCats">
+        <div class="filtro-cat on" data-cat="" onclick="setFiltro('')">Todas</div>
+        <div class="filtro-cat" data-cat="Animada" onclick="setFiltro('Animada')">💃🕺 Animada</div>
+        <div class="filtro-cat" data-cat="Ceia/Páscoa" onclick="setFiltro('Ceia/Páscoa')">🍇🍞 Ceia/Páscoa</div>
+        <div class="filtro-cat" data-cat="Natal" onclick="setFiltro('Natal')">🎄 Natal</div>
+      </div>
+      <div id="listaMusicas"></div>
+    </div>
+  </div>
+
+  <!-- EQUIPE -->
+  <div id="painel-pessoas" class="painel">
+    <div class="info-box">Nomes que aparecem na lista. Adicione convidados de outra igreja quando precisar.</div>
+    <div class="card">
+      <h2>➕ Adicionar pessoa</h2>
+      <label>Nome</label>
+      <input type="text" id="pNome" placeholder="Nome da pessoa">
+      <label>Função</label>
+      <select id="pFuncao">
+        <option value="Ministro">Ministro (também canta)</option>
+        <option value="Vocal">Vocal</option>
+        <option value="Teclado">Teclado</option>
+        <option value="Violão">Violão</option>
+        <option value="Baixo">Baixo</option>
+        <option value="Bateria">Bateria</option>
+        <option value="Guitarra">Guitarra</option>
+        <option value="Sopro">Sopro</option>
+      </select>
+      <label><input type="checkbox" id="pConvidado" style="width:auto;margin-right:6px"> É convidado de outra igreja</label>
+      <div style="height:12px"></div>
+      <button class="btn btn-primario btn-block" onclick="addPessoa()">Adicionar</button>
+    </div>
+    <div id="listaPessoas"></div>
+  </div>
+</div>
+
+<!-- MODAL montar escala -->
+<div class="modal-bg" id="modalEscala">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modalEscala')">×</button>
+    <h2>Montar escala</h2>
+    <p class="sub" id="modalSub"></p>
+    <div id="modalCorpo"></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-primario btn-block" onclick="fecharModal('modalEscala')">Concluir</button>
+  </div>
+</div>
+
+<!-- MODAL escolher músicas -->
+<div class="modal-bg" id="modalRepertorio">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modalRepertorio')">×</button>
+    <!-- PASSO 1: escolher músicas -->
+    <div id="repPasso1">
+      <h2>🎵 Escolher músicas</h2>
+      <p class="sub" id="repSub"></p>
+      <div class="busca"><input type="text" id="buscaRep" placeholder="Buscar no repositório..." oninput="renderEscolhaMusicas()"></div>
+      <div class="filtro-cats" id="filtroCatsRep">
+        <div class="filtro-cat on" data-cat="" onclick="setFiltroRep('')">Todas</div>
+        <div class="filtro-cat" data-cat="Animada" onclick="setFiltroRep('Animada')">💃🕺 Animada</div>
+        <div class="filtro-cat" data-cat="Ceia/Páscoa" onclick="setFiltroRep('Ceia/Páscoa')">🍇🍞 Ceia/Páscoa</div>
+        <div class="filtro-cat" data-cat="Natal" onclick="setFiltroRep('Natal')">🎄 Natal</div>
+      </div>
+      <div class="contador-sel" id="contadorSelRep"></div>
+      <div id="escolhaMusicas" style="max-height:44vh;overflow-y:auto"></div>
+      <div style="height:12px"></div>
+      <button class="btn btn-primario btn-block" onclick="avancarSolistas()">Avançar →</button>
+    </div>
+    <!-- PASSO 2: quem sola -->
+    <div id="repPasso2" style="display:none">
+      <h2>🎤 Quem sola?</h2>
+      <p class="sub" id="repSub2"></p>
+      <div id="listaSolistas" style="max-height:56vh;overflow-y:auto"></div>
+      <div style="height:12px"></div>
+      <div class="linha-btns">
+        <button class="btn btn-secundario" style="flex:1" onclick="voltarMusicas()">← Voltar</button>
+        <button class="btn btn-primario" style="flex:2" onclick="fecharModal('modalRepertorio')">Concluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL editar musica -->
+<div class="modal-bg" id="modalEditar">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modalEditar')">×</button>
+    <h2>✏️ Editar música</h2>
+    <label>Nome da música</label>
+    <input type="text" id="eNome">
+    <label>Link da música (YouTube)</label>
+    <input type="url" id="eLink" placeholder="https://youtube.com/...">
+    <label>Link da divisão vocal (YouTube ou Drive)</label>
+    <input type="url" id="eVoz" placeholder="https://...">
+    <label>Solo / observação</label>
+    <input type="text" id="eSolo">
+    <label>Categoria</label>
+    <select id="eCat">
+      <option value="">Nenhuma (comum)</option>
+      <option value="Animada">💃🕺 Animada</option>
+      <option value="Ceia/Páscoa">🍇🍞 Ceia/Páscoa</option>
+      <option value="Natal">🎄 Natal</option>
+    </select>
+    <div style="height:14px"></div>
+    <button class="btn btn-primario btn-block" onclick="salvarEdicao()">Salvar alterações</button>
+  </div>
+</div>
+
+<!-- MODAL resumo whatsapp -->
+<div class="modal-bg" id="modalResumo">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('modalResumo')">×</button>
+    <h2>📲 Resumo para o grupo</h2>
+    <p class="sub">Copie e cole no WhatsApp.</p>
+    <div class="resumo-preview" id="resumoTexto"></div>
+    <button class="btn btn-verde btn-block" onclick="copiarResumo()">📋 Copiar texto</button>
+  </div>
+</div>
+
+<!-- MODAL confirmar -->
+<div class="modal-bg" id="modalConfirmar">
+  <div class="modal" style="border-radius:16px;max-width:420px;margin:auto;align-self:center">
+    <h2 id="confTitulo">Confirmar</h2>
+    <p id="confTexto" style="margin:8px 0 16px;font-size:.92rem;color:var(--suave)"></p>
+    <div class="linha-btns">
+      <button class="btn btn-secundario" style="flex:1" onclick="fecharModal('modalConfirmar')">Cancelar</button>
+      <button class="btn btn-perigo" style="flex:1" id="confBtn">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FUNCOES_INSTR=["Teclado","Violão","Baixo","Bateria","Guitarra","Sopro"];
+const MAX_MICROFONES=6;
+
+const PESSOAS_INICIAIS=[
+  {n:"Thaise",f:"Ministro"},{n:"Bárbara",f:"Ministro"},{n:"Júlio",f:"Ministro"},
+  {n:"Viviane",f:"Ministro"},{n:"Débora",f:"Ministro"},{n:"Luciana",f:"Ministro"},
+  {n:"Ana Carolina",f:"Ministro"},{n:"Henrique",f:"Ministro"},{n:"Bruno",f:"Ministro"},
+  {n:"Anaísa",f:"Vocal"},{n:"Maria Júlia",f:"Vocal"},{n:"Laís",f:"Vocal"},{n:"Matheus",f:"Vocal"},
+  {n:"Vinicius",f:"Teclado"},{n:"Heitor",f:"Teclado"},
+  {n:"Francisco",f:"Violão"},{n:"Roger",f:"Violão"},{n:"Rodrigo Alef",f:"Violão"},{n:"Kaique",f:"Violão"},{n:"Carlos",f:"Violão"},
+  {n:"Elias",f:"Baixo"},{n:"Vernek",f:"Baixo"},
+  {n:"Lorran",f:"Bateria"},{n:"Estevão",f:"Bateria"},
+  {n:"Fabrício",f:"Guitarra"},
+  {n:"Ernandes",f:"Sopro"},
+];
+
+const MUSICAS_INICIAIS=[{"n": "1000 GRAUS (RENASCER)", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=u73A5821nIc&feature=youtu.be", "v": "https://www.youtube.com/watch?v=T7tnspkt0fU", "c": "Animada"}, {"n": "A BENÇÃO (dueto)", "s": "Carol e Henrique", "l": "https://youtu.be/v8gaG2ed01I?si=NnwcxfhwZyCuIDnf", "v": "", "c": ""}, {"n": "A BENÇÃO (ibab)", "s": "Uníssono", "l": "https://youtu.be/RfG28isjcAk?si=u3tJqdzXOMpJeW9Q", "v": "", "c": ""}, {"n": "A ELE A GLÓRIA", "s": "Julio", "l": "https://www.youtube.com/watch?v=rl0aJ3G_mzw", "v": "https://drive.google.com/drive/folders/1K74s8OnpdcrtmHquFn9_y2SeVg9REI6y?usp=drive_link", "c": ""}, {"n": "A ELE A GLÓRIA (fem)", "s": "Lais", "l": "https://youtu.be/9p3qBC3VotM?si=DDgsB-FP2UNYF0uB", "v": "https://www.youtube.com/watch?v=yYmUDUjPXRw", "c": ""}, {"n": "ABRAÇA-ME (D.T.)", "s": "Luciana", "l": "https://www.youtube.com/watch?v=chpGloSFl0I", "v": "https://drive.google.com/drive/folders/1Kt9GHK_6gy_WtYMpJ3YtVE5QhGcnbn9s?usp=drive_link", "c": ""}, {"n": "AGRADEÇO", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=KpPCgpvPmJc", "v": "", "c": "Animada"}, {"n": "ALFA E OMEGA", "s": "Maju e Luciana", "l": "https://www.youtube.com/watch?v=hCVRYamLhHk", "v": "https://drive.google.com/drive/folders/177dCeJwmvOZ7729ITBBDdSaJNyqnAOKB?usp=drive_link", "c": ""}, {"n": "ALTO PREÇO", "s": "Thaise", "l": "https://youtu.be/42Rk-zNVJa8?si=WOj0yDuAE2B1qcjA", "v": "", "c": "Ceia/Páscoa"}, {"n": "AMIGO DE DEUS", "s": "Maju", "l": "https://www.youtube.com/watch?v=d-meRD4YsFg", "v": "", "c": ""}, {"n": "AMO O SENHOR", "s": "Débora, Bárbara ou Vivi", "l": "https://www.youtube.com/watch?v=i940blPysjk", "v": "https://drive.google.com/drive/folders/1Sn8rcWE330LUVkp6oNQddJkuGJoBBzYd", "c": ""}, {"n": "AO ERGUERMOS AS MÃOS", "s": "Laura", "l": "https://www.youtube.com/watch?v=prKARWDrwEo", "v": "https://drive.google.com/drive/folders/1QYW2m0tnoCkgNnpQtn4bseNfqQ-9oCLT?usp=drive_link", "c": ""}, {"n": "AO ÚNICO (fem)", "s": "Bárbara", "l": "https://youtu.be/znWE9k2gVI8", "v": "https://youtu.be/zTcHcMX_jGk", "c": ""}, {"n": "AO ÚNICO (masc)", "s": "Júlio", "l": "https://www.youtube.com/watch?v=Gar7y0xoqos", "v": "https://drive.google.com/drive/folders/1_bBT-A4FTC3CrHgPRVjV6qnoLcQ7I9rg?usp=drive_link", "c": ""}, {"n": "AOS PÉS DA CRUZ", "s": "Bruno", "l": "https://www.youtube.com/watch?v=ixPpw8OiKJo", "v": "", "c": ""}, {"n": "ATÉ OUTRA VEZ", "s": "Henrique", "l": "https://youtu.be/33bQTEkTa1s?si=PWJ9iX7KY22DQ1PM", "v": "", "c": "Animada"}, {"n": "ATOS 2", "s": "Maju", "l": "https://www.youtube.com/watch?v=WWrU6LC_4ho", "v": "https://drive.google.com/drive/folders/1KJ7Z4rxkw6C0VxI1orrtPI9ZQQqBTLRK?usp=drive_link", "c": ""}, {"n": "ATOS 2 + ELE É EXALTADO", "s": "Henrique", "l": "https://www.youtube.com/watch?v=Stq7QCZT0rY", "v": "", "c": ""}, {"n": "BÊNÇÃOS QUE NÃO TEM FIM", "s": "Vivi", "l": "https://youtu.be/Xq_07hEF2AQ?si=6LGQ6U0knP2aTCbE", "v": "https://drive.google.com/drive/folders/1RRPjRMyzQGdfmzx72XAoTEb3suqtmcRw", "c": ""}, {"n": "BOM BOM PAI", "s": "Luciana ou Bárbara", "l": "https://www.youtube.com/watch?v=4WgcvA1gDTE", "v": "https://drive.google.com/drive/folders/18uzy4YTHd3vOANtDiwY47MdJu2vk6zkL?usp=drive_link", "c": ""}, {"n": "BONDADE DE DEUS", "s": "Luciana ou Maju (fem) / Henrique (masc)", "l": "https://www.youtube.com/watch?v=ScEN3eh-bnE", "v": "https://drive.google.com/drive/folders/1QhQlefv7gZIEjgbmsN-V4_VLflVgrWyu?usp=drive_link", "c": ""}, {"n": "BRILHA EM MIM", "s": "Dueto Bárbara e Julio", "l": "https://www.youtube.com/watch?v=KCZrov71O7A", "v": "", "c": ""}, {"n": "CAMINHO NO DESERTO", "s": "Luciana + Maju", "l": "https://www.youtube.com/watch?v=n3qTisl_Unk", "v": "https://drive.google.com/drive/folders/1yKk1C7j0q61JPqGd-DIQcIzBoQ-MzuKx?usp=drive_link", "c": ""}, {"n": "CANÇÃO DO APOCALIPSE", "s": "Thaise", "l": "https://youtu.be/5-UHfUMarQk?si=sn9Rko2ohctQ5VYB", "v": "", "c": ""}, {"n": "CANTA MINH'ALMA", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=t4iz3vRTeR0", "v": "https://www.youtube.com/watch?v=twmAozTJL0E", "c": "Ceia/Páscoa"}, {"n": "CC 112 - VENCENDO VEM JESUS", "s": "Henrique", "l": "https://www.youtube.com/watch?v=W1FtJC_Os8g", "v": "", "c": ""}, {"n": "CC 132 - RUDE CRUZ", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=79IoO33Z3F4", "v": "", "c": ""}, {"n": "CC 323 - CASTELO FORTE", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=RGCzQjFKk2w", "v": "https://drive.google.com/drive/folders/1sLRboXW9hFQOeGQOi5JDpNtNpKs24zNX?usp=drive_link", "c": ""}, {"n": "CC 329 - CONTA AS BÊNÇÃOS", "s": "Múltiplos vocais", "l": "https://www.youtube.com/watch?v=wWcmdZLw-yY", "v": "", "c": ""}, {"n": "CC 375 - Canta Minh'alma - Segurança", "s": "Henrique", "l": "https://youtu.be/xPo8KIFbkU0", "v": "", "c": ""}, {"n": "CC 398 - SOU FELIZ COM JESUS", "s": "Múltiplos solos", "l": "https://www.youtube.com/watch?v=_fDvp4FePe4", "v": "", "c": ""}, {"n": "CC 476 - BRILHO CELESTE", "s": "Uníssono", "l": "https://youtu.be/eUMlMBBJPwc?si=IiX5t1XD6gTm0gMD", "v": "", "c": ""}, {"n": "CC 525 - VENCENDO VEM JESUS", "s": "Henrique", "l": "https://youtu.be/W1FtJC_Os8g?si=ipFRLfLFtXrXU9zk", "v": "", "c": ""}, {"n": "CELEBRAI A CRISTO", "s": "", "l": "", "v": "", "c": ""}, {"n": "CÉU", "s": "Maju", "l": "https://www.youtube.com/watch?v=i62VQOuW3Gw", "v": "", "c": ""}, {"n": "CLAMO JESUS", "s": "Julio + Luciana (tom abaixo)\nHenrique + Carol (original)", "l": "https://www.youtube.com/watch?v=ye9caqETC0A", "v": "https://drive.google.com/drive/folders/1q2r2HRCiVPdN4zDYUcWt5W8tJHd_OjUw", "c": ""}, {"n": "COLOSSENSES 1", "s": "Henrique", "l": "https://www.youtube.com/watch?v=gk7XWCMwO94", "v": "", "c": "Ceia/Páscoa"}, {"n": "COM TUDO QUE SOU", "s": "Luciana", "l": "https://youtu.be/QP93_wJ164U?si=rPanLO4PJZPiSshq", "v": "https://drive.google.com/drive/folders/1627RGwph4om95tRDbTDifjAmfzdxyFeP", "c": ""}, {"n": "CONSAGRAÇÃO", "s": "Vivi ou Laura (Tom F#)", "l": "https://www.youtube.com/watch?v=IsRkz3XPtOc", "v": "https://drive.google.com/drive/folders/18sgXBI-ccv1_4-tIqj3z_0wTxqoSnLaU?usp=drive_link", "c": ""}, {"n": "CORAÇÃO IGUAL AO TEU", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=l_YmyECnUYw", "v": "https://drive.google.com/drive/folders/1sHhx8O8vJKmbi9wIDGB_1UXtj0Fj64H_?usp=drive_link", "c": ""}, {"n": "CRUZ", "s": "Carol e Henrique", "l": "https://youtu.be/h7mRVFXqjlg?si=9DWfyc9-K_cDIDNd", "v": "https://youtu.be/mcsQPxZbhTk?si=RScAJL1yk11mYVhm", "c": "Ceia/Páscoa"}, {"n": "DESCANSAREI", "s": "Laura", "l": "https://www.youtube.com/watch?v=WRhHVVt_4Co", "v": "https://drive.google.com/drive/folders/1iVErQbXfia8mSNaNIxoRllY0ueL_z2Un?usp=drive_link", "c": ""}, {"n": "DEUS CUIDA DE MIM", "s": "Solo Júlio na versão masculina. Solos com estrofes divididas na versão feminina.", "l": "https://www.youtube.com/watch?v=BbhES3zvXzc", "v": "https://drive.google.com/drive/folders/1mq4WXis-QSSXD-5CxJKV9yqTsHCSVGSh?usp=drive_link", "c": ""}, {"n": "DEUS É DEUS", "s": "Julio", "l": "https://www.youtube.com/watch?v=ybyIkyD4N_0", "v": "", "c": ""}, {"n": "DEUS ETERNO", "s": "", "l": "", "v": "", "c": ""}, {"n": "DEUS TEM O MELHOR", "s": "Solo Masc", "l": "https://www.youtube.com/watch?v=zfxKRg3UGWw", "v": "", "c": ""}, {"n": "DIGNO É O SENHOR", "s": "Thaise", "l": "https://www.youtube.com/watch?v=stKPXkcW5v8", "v": "https://drive.google.com/drive/folders/1FG39k2yty04DRYJHTpJpKt0tjaXGDHtC", "c": ""}, {"n": "ELE CONTINUA SENDO BOM", "s": "Julio Versão masc // Uníssono Feminino, tom E", "l": "https://www.youtube.com/watch?v=4IcaiJh-cZY", "v": "https://drive.google.com/drive/folders/1sJsKEiSgWRQ16FhnDsbSJMWqzWF-wrIF?usp=drive_link", "c": ""}, {"n": "ELE É CONTIGO", "s": "Julio", "l": "https://www.youtube.com/watch?v=7rITTKpFvHU", "v": "https://drive.google.com/drive/folders/1jhk04UMFmolxVX-XQxtXOEaPm64kuG_v?usp=drive_link", "c": ""}, {"n": "ELE É EXALTADO", "s": "Luciana", "l": "https://www.youtube.com/watch?v=oSk9Uu2CxLY", "v": "https://drive.google.com/drive/folders/1_TsI9i053u1tv6xDb-4gIL4amXOurSbV?usp=drive_link", "c": ""}, {"n": "ELE ME AMA", "s": "", "l": "", "v": "", "c": ""}, {"n": "ELE VEM", "s": "Luciana", "l": "https://www.youtube.com/watch?v=YudXB8MZRTs", "v": "https://drive.google.com/drive/folders/16zflA885ZjMkrLckeFPsI952FnJcBxIc?usp=drive_link", "c": ""}, {"n": "ELE VEM PRA TE SALVAR", "s": "Vivi", "l": "https://www.youtube.com/watch?v=7_84klayCqg", "v": "", "c": ""}, {"n": "EM ESPÍRITO EM VERDADE", "s": "Maju", "l": "", "v": "", "c": ""}, {"n": "EM TEUS BRAÇOS", "s": "Maju", "l": "https://www.youtube.com/watch?v=IxpWNuxGmzc", "v": "https://drive.google.com/drive/folders/1S00pV4xCW3hD8bc09MYW1e8pRl9Pf48d?usp=drive_link", "c": ""}, {"n": "EMANUEL", "s": "Dueto Luciana", "l": "https://www.youtube.com/watch?v=l2g0aHURubQ", "v": "https://drive.google.com/drive/folders/1uwQgNyUaOr_ED61BYIxFBMHIy8tZshDP?usp=drive_link", "c": ""}, {"n": "EMAÚS", "s": "Débora", "l": "https://share.google/G5H74tyYUUDABnWJC", "v": "", "c": ""}, {"n": "ENXUGUE AS LÁGRIMAS", "s": "Múltiplos vocais", "l": "https://www.youtube.com/watch?v=CFYJxwtu4dw", "v": "https://drive.google.com/drive/folders/1upzJV4Reoii8UhUi6zbTX7GmOY33V5RY?usp=drive_link", "c": ""}, {"n": "ESCAPE", "s": "Ana Carolina ou Maju", "l": "https://www.youtube.com/watch?v=vM2A2XEm9TE", "v": "https://drive.google.com/drive/folders/1v-4mUxetSFp4Bjm7R0yLoeUguB-gPLZJ", "c": ""}, {"n": "ESPERAR É CAMINHAR", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=NmDXkml_EpQ", "v": "https://drive.google.com/drive/folders/18tM3GCGn0qSCgURyLKKRlsa2JT_0NUDP?usp=drive_link", "c": ""}, {"n": "ESTAMOS DE PÉ", "s": "Uníssono", "l": "https://youtu.be/5yYTU1-fJMk", "v": "https://youtu.be/YG_4qo0CdW4?si=hHuPwWFbiyMrnbLG", "c": ""}, {"n": "ESTRELA DA MANHÃ", "s": "Vivi", "l": "https://www.youtube.com/watch?v=nC11wNNfgsI", "v": "https://drive.google.com/drive/folders/1SnLxCoqx5tB7nkMniOg6LwFgMwtwEd8H", "c": ""}, {"n": "ETERNO DEUS", "s": "Julio", "l": "https://www.youtube.com/watch?v=D67gv66OmFc", "v": "https://drive.google.com/drive/folders/1KTYlA1yu1yJVrWke0ruLqu-O4ImZ4bSJ?usp=drive_link", "c": "Animada"}, {"n": "EU E MINHA CASA", "s": "", "l": "https://www.youtube.com/watch?v=oD6oFvjE6Zw", "v": "", "c": ""}, {"n": "EU ME RENDO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=HWVuBlxj0Fg", "v": "https://drive.google.com/drive/folders/1iUklYGzJTMx0w-G4T_rKJipYuvQQuymH?usp=drive_link", "c": ""}, {"n": "EU TE VEJO EM TUDO", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=SFiu3KLNd34", "v": "https://drive.google.com/drive/folders/1yauziX-DtcWotqiiw_1n9ProK3b_NWx8?usp=drive_link", "c": ""}, {"n": "EU VEJO A GLÓRIA", "s": "Débora", "l": "https://www.youtube.com/watch?v=Cmsqhr9UrIw", "v": "https://youtu.be/cM76jGrazWk?si=87opPir_daknC6Au", "c": ""}, {"n": "EU VOU CONSTRUIR", "s": "Vivi", "l": "https://youtu.be/bFoIro0Zl2Y?si=5-CH3vR0W-y-LnaC", "v": "", "c": ""}, {"n": "FAVOR DE DEUS", "s": "", "l": "https://www.youtube.com/watch?v=4zotzzdLy8o", "v": "", "c": ""}, {"n": "FÉ PARA O IMPOSSÍVEL", "s": "Júlio", "l": "https://youtu.be/8AESIsViPsg?si=O7th4bJ3N2rpYAXv", "v": "", "c": ""}, {"n": "FILHO DO DEUS VIVO", "s": "", "l": "https://www.youtube.com/watch?v=PdJoTcOgwUA", "v": "", "c": ""}, {"n": "GALILEU", "s": "Júlio", "l": "https://www.youtube.com/watch?v=bOFbr2RpLek", "v": "https://drive.google.com/drive/folders/1mrwRzEzG3QfsPtKbeU_B6DTMLFFvJU_b?usp=drive_link", "c": "Animada"}, {"n": "GETSEMANI", "s": "", "l": "", "v": "", "c": ""}, {"n": "GRANDE É O SENHOR", "s": "Débora e Thaise", "l": "https://www.youtube.com/watch?v=Eu6pr3N-UXE", "v": "https://drive.google.com/drive/folders/1S45fVnahWbGPXNeDDvwLIH1TN6YS5Zql?usp=drive_link", "c": ""}, {"n": "GRATIDÃO (Feminino)", "s": "", "l": "https://youtu.be/WLM7GbpHj8U?si=_y-7HUb9T14PUB4i", "v": "", "c": ""}, {"n": "GRATIDÃO (Masculino)", "s": "Henrique", "l": "https://youtu.be/Z1faUgngZlU?si=-UspnEZ1grMoIIP9", "v": "https://youtu.be/bvHa6RdVYLQ?si=6UCMqvn8VA9OYy1w", "c": ""}, {"n": "HÁ UM LUGAR", "s": "Bárbara ou Luciana", "l": "https://www.youtube.com/watch?v=mUubQBy5OVY", "v": "https://drive.google.com/drive/folders/1jiAz_uPNVf6aE_8_eAcln5jkyBFjs0fH?usp=drive_link", "c": ""}, {"n": "HOJE É TEMPO DE LOUVAR A DEUS", "s": "Thaise e Carol", "l": "https://www.youtube.com/watch?v=x_cGOvOP2cc&t=1s", "v": "", "c": ""}, {"n": "HOSANA", "s": "", "l": "", "v": "", "c": ""}, {"n": "IGREJA", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=-z9L9HYt6g0", "v": "https://drive.google.com/drive/folders/1Qg99qsX5WR2YAHXQy2ilJu35Drenv568?usp=drive_link", "c": ""}, {"n": "INVOCA-ME", "s": "Júlio", "l": "https://www.youtube.com/watch?v=uRAQqNpgjW4", "v": "", "c": ""}, {"n": "JEOVÁ JIREH", "s": "Thaise ou Carol", "l": "https://youtu.be/QZDCWaznWaM?si=XtBIF99UKfLgLTTa", "v": "https://drive.google.com/drive/folders/1JD1cmQeU8w499gRyRRNiLXXqG8dbyhMW", "c": ""}, {"n": "JESUS CRISTO (Mudou Meu Viver)", "s": "", "l": "", "v": "", "c": ""}, {"n": "JESUS É O CAMINHO", "s": "Luciana ou Bárbara", "l": "https://www.youtube.com/watch?v=SrvFZDSkieU", "v": "https://drive.google.com/drive/folders/1J3BsFlzlghd7E6PJNnhVBSKV4_odLmHU", "c": ""}, {"n": "JESUS EM TUA PRESENÇA", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=CXltx03GF3M", "v": "", "c": ""}, {"n": "JESUS O PLANO PERFEITO", "s": "Julio", "l": "https://www.youtube.com/watch?v=OtDvlKRgJrc", "v": "", "c": ""}, {"n": "JESUS TE AMAMOS", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=vAY0pr7jHfQ", "v": "https://drive.google.com/drive/folders/11Pf7ldLAJZSkTYL0EqeIH_O2_6s_RbSH", "c": ""}, {"n": "JESUS, FILHO DE DEUS", "s": "Henrique", "l": "https://www.youtube.com/watch?v=_G_xbDaSDEQ", "v": "", "c": "Ceia/Páscoa"}, {"n": "LÁ", "s": "Julio", "l": "https://www.youtube.com/watch?v=R-cfUERyTII", "v": "https://drive.google.com/drive/folders/1y956jNV-_jQnl3kpgLhGwpnPU7jDCKA6?usp=drive_link", "c": ""}, {"n": "LEÃO E O CORDEIRO", "s": "Henrique", "l": "https://youtu.be/lc8kQHrw2bk?si=XZ4y2EEUuubkkMPV", "v": "", "c": ""}, {"n": "LEVA-ME ALÉM", "s": "Luciana, tom alterado", "l": "https://www.youtube.com/watch?v=Z3z6kKAJDWQ", "v": "https://drive.google.com/drive/folders/1FpzUrWiWsDuRJNPc9ZWzjKy7oWNFgO7b?usp=drive_link", "c": ""}, {"n": "LINDO ÉS", "s": "Maju + Júlio", "l": "https://www.youtube.com/watch?v=DvAMILpqpd8", "v": "https://drive.google.com/drive/folders/18pgz2cxLEy-9ie4qLpQdjFwkvsjXw_Xt?usp=drive_link", "c": ""}, {"n": "LOUVEMOS AO SENHOR", "s": "Bruno e Julio", "l": "https://www.youtube.com/watch?v=76S1BZ9EN2k", "v": "", "c": ""}, {"n": "LOUVOR E HONRA", "s": "Julio (masc)\nUníssono (fem)", "l": "https://youtu.be/43O3ecWRQFE?si=bKyn1X1M78rd", "v": "https://drive.google.com/drive/folders/1QSY6UVhJawH_IKfAC2dL_e0p-S46wdf3?usp=drive_link", "c": "Animada"}, {"n": "LUGAR SECRETO", "s": "Maju", "l": "https://www.youtube.com/watch?v=YnrN0o0lubM", "v": "https://drive.google.com/drive/folders/1aqKJKB-UK_4-oBwCOqNloMbVjVSDGHsp", "c": ""}, {"n": "MAJESTOSO", "s": "Julio", "l": "https://www.youtube.com/watch?v=TUJjKSWyaPk", "v": "https://drive.google.com/drive/folders/1mhv9xR7AzfeYFMiHAB4CL2uBK8ra20hF?usp=drive_link", "c": ""}, {"n": "MARANATA", "s": "Maju ou Laura", "l": "https://www.youtube.com/watch?v=iS6GXPbhCwU", "v": "https://drive.google.com/drive/folders/1yWBjxdYibst-d_yHxdoEAE856VncWwQL?usp=drive_link", "c": ""}, {"n": "MARAVILHADO", "s": "Luciana ou Bárbara", "l": "https://www.youtube.com/watch?v=oE_brFKwldk", "v": "https://drive.google.com/drive/folders/1sNSVE0qZaxl8n4Vct-QV_S5gCbP2XMIw?usp=drive_link", "c": ""}, {"n": "MARCA DA PROMESSA", "s": "Julio", "l": "https://www.youtube.com/watch?v=o2wwqLrFe1g", "v": "https://www.youtube.com/watch?v=UJ2FXR4S58c", "c": ""}, {"n": "ME AMA", "s": "", "l": "", "v": "", "c": ""}, {"n": "ME DERRAMAR", "s": "Laura", "l": "https://www.youtube.com/watch?v=_zzg6pBZlJs", "v": "https://drive.google.com/drive/folders/1J9Vsqd5nyPSDenjzs-gqT7AAIqHzHSFN", "c": ""}, {"n": "MEDLEY  A ALEGRIA / O EXERCITO DE DEUS / ...", "s": "Uníssono", "l": "https://youtu.be/1PptMv81jAk?si=LnHMlBZ_05-ll-XR", "v": "", "c": "Animada"}, {"n": "MEDLEY Ao único + Espírito, enche a minha vida + Consagração", "s": "Múltiplos vocais", "l": "https://youtu.be/2DMXo9Q32E8?si=iKe7JmFTuWkjc2EY", "v": "", "c": ""}, {"n": "MEDLEY ESPÍRITO ENCHE A MINHA VIDA + NÃO VOU CALAR MEUS LÁBIOS", "s": "Thaise", "l": "https://youtu.be/P4Z9d-0iMLs?si=uV_JAZkOGXIcQT_e", "v": "", "c": ""}, {"n": "MEDLEY Gratidão + Alfa e Ômega", "s": "Carol", "l": "https://youtu.be/_KjwCrRrkkM?si=rE1XnNKAxU5hwaCf", "v": "", "c": ""}, {"n": "MEDLEY Jesus em Tua Presença + Ao único + Eu Navegarei", "s": "", "l": "", "v": "", "c": ""}, {"n": "MEDLEY Maranata / Oh Quão Lindo esse Nome É / Pra Sempre", "s": "Thaise / Lu / Carol", "l": "https://www.youtube.com/watch?v=U7Y3t1Rg6dE", "v": "", "c": ""}, {"n": "MEDLEY Poderoso Deus / O Que Tua Glória Fez Comigo / Preciso De Ti", "s": "Henrique / Carol / Unissono", "l": "https://www.youtube.com/watch?v=ak4dAB1eZ_w", "v": "", "c": ""}, {"n": "MEDLEY YEHOVAH + TE AGRADEÇO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=Nb0HE87uNU8", "v": "https://drive.google.com/drive/folders/1n8MhrRzaSZVnqTCEVYeTKg6A-uTLC7DV?usp=drive_link", "c": "Animada"}, {"n": "MEU ALVO", "s": "", "l": "", "v": "", "c": ""}, {"n": "MEU AMANHÃ", "s": "", "l": "", "v": "", "c": ""}, {"n": "MEU FILHO NÃO TEMAS", "s": "", "l": "", "v": "", "c": ""}, {"n": "MEU IRMÃO", "s": "Maju, Julio e Bárbara", "l": "https://www.youtube.com/watch?v=M74r1nFFnzk", "v": "https://drive.google.com/drive/folders/1BmqTZ3QHPGH-Fw4LFVyAWaNrA3Jmd8x1", "c": "Animada"}, {"n": "MEU PRAZER(EM ESPÍRITO)", "s": "Maju", "l": "https://www.youtube.com/watch?v=UDXfEu52FL8", "v": "https://drive.google.com/drive/folders/1idbdRevlhxwPTeiGfeJ7DoCOAIZD341z", "c": ""}, {"n": "MEU RESPIRAR", "s": "Maju", "l": "https://www.youtube.com/watch?v=hrqfviD97r0", "v": "https://drive.google.com/drive/folders/1QiZiYJ-ORPWx9t7zS9jLiN6ogKLH3HVw?usp=drive_link", "c": ""}, {"n": "MUITOS VIRÃO TE LOUVAR", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=U94w-ZR0OfA", "v": "https://drive.google.com/drive/folders/1ZUUfxxSPBvsjjtRj7-WDF4rFjrDkxPPD?usp=drive_link", "c": "Animada"}, {"n": "NADA ALÉM DO SANGUE", "s": "Júlio + Luciana, Maju ou Bárbara", "l": "https://www.youtube.com/watch?v=8JOvwxAZ-zo", "v": "https://youtu.be/DThP_9icAKo", "c": "Ceia/Páscoa"}, {"n": "NADA PODE CALAR UM ADORADOR", "s": "Laura", "l": "https://www.youtube.com/watch?v=rDhJTDVZ1cI", "v": "", "c": ""}, {"n": "NÃO HÁ OUTRO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=SAeZM5Qc7es", "v": "https://drive.google.com/drive/folders/1HQTVJrKk9-8oGUwUlWm5UtrplgVtHTVr", "c": "Animada"}, {"n": "NÃO SEREMOS ABALADOS", "s": "Carol", "l": "https://youtu.be/db_etVIp1Lg", "v": "", "c": ""}, {"n": "NÃO TENHA SOBRE TI", "s": "", "l": "", "v": "", "c": ""}, {"n": "NENHUM DEUS COMO TU", "s": "Luciana ou Bárbara", "l": "https://www.youtube.com/watch?v=SO9A14YOJos", "v": "", "c": ""}, {"n": "NUNCA PARE DE LUTAR", "s": "Vivi", "l": "https://www.youtube.com/watch?v=t_WpcchhcQo", "v": "https://drive.google.com/drive/folders/1yNkBomjdNL64RdF6JL3249sK1kXWa3f7?usp=drive_link", "c": ""}, {"n": "O ESPÍRITO DO SENHOR", "s": "Júlio, Tom F", "l": "https://www.youtube.com/watch?v=WFJp64MgVh8", "v": "", "c": ""}, {"n": "O NOSSO GENERAL É CRISTO", "s": "Uníssono", "l": "https://youtu.be/dS35Xhf2UeI?si=RNzm-Te6LPp-8KxK", "v": "", "c": "Animada"}, {"n": "OBRIGADO", "s": "", "l": "", "v": "", "c": ""}, {"n": "OCEANOS", "s": "Maju", "l": "https://www.youtube.com/watch?v=1XqHlWsMThA", "v": "", "c": ""}, {"n": "OH QUÃO LINDO (ESSE NOME É)", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=V-n0FDCT2N4", "v": "https://drive.google.com/drive/folders/1mfIaSuRq55CURGfU4YCO-19kYkguwy7e?usp=drive_link", "c": "Ceia/Páscoa"}, {"n": "OS QUE ESPERAM", "s": "Luciana, Bárba ou Déborara", "l": "https://www.youtube.com/watch?v=nOyokYijM1A", "v": "https://drive.google.com/drive/folders/1mmm_dXnhLeLxDcZnqBRDRJWbLjV_6AMm?usp=drive_link", "c": "Animada"}, {"n": "OS SONHOS DE DEUS", "s": "Thaise", "l": "https://www.youtube.com/watch?v=nzKMlDnrgcw", "v": "", "c": ""}, {"n": "OUSADO AMOR", "s": "Maju ou Bárbara", "l": "https://www.youtube.com/watch?v=YIW7V4xk-yI", "v": "https://drive.google.com/drive/folders/1ps7Vhx2CG_hSFlWj9JO9Og_J6pb4LYwP", "c": ""}, {"n": "PODER PRA SALVAR", "s": "", "l": "", "v": "", "c": ""}, {"n": "PODEROSO DEUS", "s": "", "l": "", "v": "", "c": ""}, {"n": "PORQUE ELE VIVE", "s": "", "l": "https://youtu.be/3o1suXgQYfE", "v": "", "c": "Ceia/Páscoa"}, {"n": "PRA SEMPRE (DUETO)", "s": "Maju ou Carol e Julio", "l": "https://youtu.be/WrhDX3um7KA?si=tnQ_l6wHUpzVcPgG", "v": "", "c": "Ceia/Páscoa"}, {"n": "PRA SEMPRE (FEM CONTRALTO)", "s": "Bárbara (Tom E)", "l": "https://youtu.be/ishM2o8LW94", "v": "https://drive.google.com/drive/folders/1F6pvH-4Dexl7r5uknhfFVdDqDRxJXP5_", "c": "Ceia/Páscoa"}, {"n": "PRECISO DE TI", "s": "Carol", "l": "https://share.google/5ZHPhZAjEgePTtnow", "v": "", "c": ""}, {"n": "PRIMEIRA ESSÊNCIA", "s": "Thaise", "l": "https://www.youtube.com/watch?v=HN55iqXQtiQ", "v": "https://drive.google.com/drive/folders/1v5FzpHGzN48oBXrQzigv_70yqd5dTd7l", "c": ""}, {"n": "PRIMEIRO AMOR", "s": "", "l": "", "v": "", "c": ""}, {"n": "QUE SE ABRAM OS CÉUS", "s": "Luciana", "l": "https://youtu.be/kXKwkQk528A", "v": "https://youtu.be/ZGb6jalrq4M", "c": ""}, {"n": "QUEBRANTADO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=OE3fYrynTzY", "v": "https://drive.google.com/drive/folders/1F4GAg8R-Rm9XFp1nEZfyuU7uUZeDWRdk", "c": ""}, {"n": "QUEBRO MEU VASO", "s": "Maju ou Bárbara", "l": "https://www.youtube.com/watch?v=RXlDfjDg738", "v": "https://drive.google.com/drive/folders/1_bg6fADCJqGA5t_iiBsI2wZjJZm3B49s?usp=drive_link", "c": ""}, {"n": "QUEM DIZES QUE EU SOU", "s": "Vivi ou Maju", "l": "https://www.youtube.com/watch?v=2CeP-CutFiM", "v": "https://drive.google.com/drive/folders/1Vdwc6voojiF9uYD_GjMEXf6Th1LrO2XH?usp=drive_link", "c": ""}, {"n": "QUEM É COMO NOSSO DEUS", "s": "Carol", "l": "https://youtu.be/QRilv78Rroc?si=B-aRjokoXRNQu1WR", "v": "https://www.youtube.com/watch?v=j6b9S12OUn8", "c": ""}, {"n": "QUEM É ESSE?", "s": "Carol", "l": "https://www.youtube.com/watch?v=0ZF5em0MTwY", "v": "https://www.youtube.com/watch?v=NHnhYUXtiG0", "c": ""}, {"n": "RARIDADE", "s": "", "l": "", "v": "", "c": ""}, {"n": "REI DO MEU CORAÇÃO", "s": "Carol", "l": "https://youtu.be/zcM0YkF7j3w", "v": "https://drive.google.com/drive/folders/1ONOUeWZ90SuERMjxOcYn4lZLJGBMmWRE", "c": ""}, {"n": "REINA EM MIM", "s": "Júlio ou Uníssono com o tom alterado", "l": "https://www.youtube.com/watch?v=bpabvrhSJ6Y", "v": "https://drive.google.com/drive/folders/11J1Iprd9fX-jQwQBT-GGDX416tkk_b3r", "c": ""}, {"n": "REINA SOBRE MIM", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=od4trd2rOkU", "v": "https://drive.google.com/drive/folders/18v1C-Oasn5BijBiQTavDXGroDMBgAO5b?usp=drive_link", "c": ""}, {"n": "RENDIDO ESTOU", "s": "Uníssono", "l": "https://youtu.be/J-qDkZArRrM?si=l0S-QBuiSN2jSDDo", "v": "", "c": ""}, {"n": "SALMO 23", "s": "Maju", "l": "https://youtu.be/bZrHDINXrWM?si=6nJq-BGF-OsH2Y0T", "v": "", "c": ""}, {"n": "SALMOS 34 (EM TODO TEMPO)", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=yo0IPdmv--4", "v": "", "c": ""}, {"n": "SANTIDADE", "s": "Carol", "l": "https://www.youtube.com/watch?v=xU2o90ZU0AA", "v": "", "c": ""}, {"n": "SANTO ESPÍRITO", "s": "Débora", "l": "https://youtu.be/1Xprfo5-6OU", "v": "", "c": ""}, {"n": "SANTO PARA SEMPRE", "s": "Tom Masc: Henrique\nTom Fem: Luciana", "l": "https://youtu.be/ijNCc7ICCck?si=InmJqowTuQ-xVUe3", "v": "https://drive.google.com/drive/folders/1681cZi_M8PpkLNWZgeMGTD9BVLNl9ijK", "c": "Ceia/Páscoa"}, {"n": "SANTO, SANTO, SANTO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=ITWZNLFfMuI", "v": "", "c": "Animada"}, {"n": "SÊ BEM-VINDO", "s": "Henrique", "l": "https://share.google/MXcU1mE78aKc9AszP", "v": "", "c": ""}, {"n": "SE EU ME HUMILHAR", "s": "", "l": "", "v": "", "c": ""}, {"n": "SE NÃO FOR PARA TE ADORAR", "s": "Julio ou Henrique", "l": "https://www.youtube.com/watch?v=VW-6yeoQufw", "v": "https://drive.google.com/drive/folders/1v1_6gbnWWyL3XVKBG6Cv2AmVmkl9_0xQ", "c": "Animada"}, {"n": "SENHOR E REI", "s": "", "l": "https://youtu.be/zPD2W9WEm8s?si=oXq_vEyEkkYHoQBH", "v": "", "c": ""}, {"n": "SENHOR TE QUERO", "s": "Júlio", "l": "https://www.youtube.com/watch?v=JMV-K0d1QYQ", "v": "https://drive.google.com/drive/folders/1iRCq6aMf-00Umb6l3gzCymvvEqDFvOgr?usp=drive_link", "c": "Animada"}, {"n": "SER RECONHECIDO (DE DEUS)", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=m6M4EtKSnOU", "v": "https://drive.google.com/drive/folders/1KZNjheWbHpWhpjIbryGiFzz0Jtq-9lp6?usp=drive_link", "c": ""}, {"n": "SÓ TU ÉS SANTO", "s": "Luciana", "l": "https://www.youtube.com/watch?v=JnQvWSZ2U28", "v": "https://drive.google.com/drive/folders/1kW5CpELGR1mmx8Wp18aAMcG6m8LNA7ks", "c": ""}, {"n": "SÓ TU ÉS SANTO (V2)", "s": "Débora", "l": "https://www.youtube.com/watch?v=Kh14SNPaHco", "v": "", "c": ""}, {"n": "SOBRE AS ÁGUAS", "s": "Julio", "l": "https://youtu.be/sL30wkLYW7w", "v": "https://drive.google.com/drive/folders/1ybYu8qoNfVJuePHbQh1ba6a7BwXeXatM?usp=drive_link", "c": ""}, {"n": "SOU UM MILAGRE", "s": "Henrique", "l": "https://youtu.be/I_tnlNmshGY?si=RzUglBX1KiRo7ysh", "v": "", "c": ""}, {"n": "SUBLIME", "s": "Júlio (Tom C)", "l": "https://youtube.com/watch?v=7GWZwO0MdsY&si=mX1iQyR43ExGzptj", "v": "https://drive.google.com/drive/folders/1EdkgBc00qp3sTfUn9gt1iql8eskOH_hW?usp=drive_link", "c": ""}, {"n": "TÃO PROFUNDO V1 Baruk", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=m42BaZxOXLo", "v": "https://drive.google.com/drive/folders/1QoDNa9f0nbx_-WlVdOwsZBxkOFQ39CgE?usp=drive_link", "c": "Animada"}, {"n": "TÃO PROFUNDO V2 Sarah", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=kdixLXrOtiA", "v": "", "c": "Animada"}, {"n": "TE AGRADEÇO", "s": "Júlio ou Uníssono", "l": "https://www.youtube.com/watch?v=dM-7RX18A78", "v": "https://drive.google.com/drive/folders/1_Z_kcE0euG-RF6xoZY7x-8pkh_5XecfE?usp=drive_link", "c": "Animada"}, {"n": "TE AGRADEÇO (KLEBER LUCAS)", "s": "Julio", "l": "https://youtu.be/SYp7lYIxQRg?si=hFINjCZM20sR63SK", "v": "https://drive.google.com/drive/folders/1QquBXmZ7iSb3WlYyYqcNBTzundJJKFhb", "c": "Animada"}, {"n": "TE DAMOS GLÓRIA", "s": "Luciana ou Carol + Julio", "l": "https://youtu.be/WR3BMfR9_SA", "v": "", "c": ""}, {"n": "TE LOUVAREI", "s": "Júlio ou Bruno", "l": "https://www.youtube.com/watch?v=TCK9gf4J_6g", "v": "", "c": ""}, {"n": "TE LOUVAREI + ACLAME", "s": "Bruno ou Henrique", "l": "https://www.youtube.com/watch?v=doA85EYrfPc", "v": "", "c": ""}, {"n": "TEMPO DE FESTA", "s": "Uníssono", "l": "https://youtu.be/_OBktpRlqM0?si=oiAz4BQslFr3RPIZ", "v": "", "c": "Animada"}, {"n": "TEU AMOR NÃO FALHA", "s": "Débora, Bárbara ou Laura", "l": "https://www.youtube.com/watch?v=3q-pRKf-VaQ", "v": "https://drive.google.com/drive/folders/1J2kSpMDTXPItKqyIITHfw2knMiYYb3yO", "c": "Animada"}, {"n": "TEU AMOR NÃO FALHA (VERSÃO BARUK)", "s": "Uníssono", "l": "https://youtu.be/5kWoyOrrjnU?si=9EDYX44WX_2a5r-L", "v": "", "c": "Animada"}, {"n": "TEU AMOR NÃO FALHA (VERSÃO TEMPLO SOUL)", "s": "Uníssono", "l": "https://youtu.be/Npsfmz5PrvA", "v": "https://www.youtube.com/watch?v=S7QNMGjDX6Q", "c": "Animada"}, {"n": "TEU REINO", "s": "Julio", "l": "https://www.youtube.com/watch?v=lMhEFpHzRsY&feature=youtu.be", "v": "", "c": ""}, {"n": "TEU SANTO NOME", "s": "", "l": "", "v": "", "c": ""}, {"n": "TODAVIA ME ALEGRAREI (FEMININA)", "s": "Maju", "l": "https://youtu.be/ssxu_KNeH3Y?si=zLyQuEaixfwky7Ve", "v": "", "c": ""}, {"n": "TODAVIA ME ALEGRAREI (MASCULINA)", "s": "Bruno", "l": "https://www.youtube.com/watch?v=rNBedSCKwVc", "v": "https://drive.google.com/drive/folders/1F-6371zwXccrHK-9BWbjFm8hfg13044G?usp=drive_link", "c": ""}, {"n": "TODO PODER", "s": "", "l": "", "v": "", "c": ""}, {"n": "TREMENDA GRAÇA", "s": "Bárbara", "l": "https://www.youtube.com/watch?v=dI5-wfZdh7g", "v": "https://drive.google.com/drive/folders/1v5sC-EEIlJx7lK67pZRpeCf9VXCCXR8-", "c": "Animada"}, {"n": "Tu És + Águas Purificadoras", "s": "Julio, Bárbara e Luciana", "l": "https://www.youtube.com/watch?v=YXnQ02HYB1w", "v": "https://drive.google.com/drive/folders/1awwmPWqCAgr3ExKCSMT5OJQkUVvD6Qrq", "c": ""}, {"n": "TU ES BOM", "s": "Júlio", "l": "https://www.youtube.com/watch?v=2CAwy1l8DwE", "v": "https://drive.google.com/drive/folders/1if4wBRutG3a1APWHZy6MMItv_LJslYmZ", "c": ""}, {"n": "TU ÉS DEUS", "s": "Julio", "l": "https://www.youtube.com/watch?v=gS0Y4ID0HbY", "v": "https://www.youtube.com/watch?v=H-ovozTXv7g", "c": ""}, {"n": "TU ES SANTO", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=F2iotJIZz88", "v": "", "c": "Animada"}, {"n": "TU ES SOBERANO", "s": "Bruno", "l": "https://www.youtube.com/watch?v=F_ZnQ80-B9Y", "v": "", "c": ""}, {"n": "TUA ALEGRIA", "s": "Bárbara + Laura", "l": "https://www.youtube.com/watch?v=QdqxjIxlbm0", "v": "", "c": ""}, {"n": "TUA GRAÇA ME BASTA", "s": "", "l": "", "v": "", "c": ""}, {"n": "TUA VOZ", "s": "Julio", "l": "https://www.youtube.com/watch?v=lH7VGldK-90", "v": "", "c": ""}, {"n": "TUDO É DIFERENTE", "s": "", "l": "https://www.youtube.com/watch?v=OgRghYzjFSs", "v": "", "c": ""}, {"n": "TUDO O QUE SOU", "s": "", "l": "", "v": "", "c": ""}, {"n": "USA A MINHA VOZ", "s": "", "l": "", "v": "", "c": ""}, {"n": "VAI BRILHAR", "s": "", "l": "", "v": "", "c": ""}, {"n": "VEM ANDAR COMIGO", "s": "Luciana ou Bárbara", "l": "https://www.youtube.com/watch?v=oADYoAAHOzk", "v": "https://drive.google.com/drive/folders/1ZT1_MEHE3hyyGSSDFcSQwlSwJrOw8Q07?usp=drive_link", "c": ""}, {"n": "VEM ME BUSCAR", "s": "Maju ou Carol", "l": "https://www.youtube.com/watch?v=t6Pd8gXIASU", "v": "https://www.youtube.com/watch?v=A8OflZnqKFw", "c": ""}, {"n": "VEM, ESTA É A HORA", "s": "Uníssono", "l": "https://www.youtube.com/watch?v=7j5aLkEe_vE", "v": "https://drive.google.com/drive/folders/1iVu6rPqlir3OULCnXBb53TS7EXGR8Rub?usp=drive_link", "c": "Animada"}, {"n": "VIM PARA ADORAR-TE", "s": "Bruno, Luciana", "l": "https://www.youtube.com/watch?v=vnNgG3hXaYg", "v": "https://drive.google.com/drive/folders/1mGfl6KwBU4QT31c3c_cjt6eN1dj0o7Qm?usp=drive_link", "c": ""}, {"n": "VITORIOSO ÉS", "s": "Luciana (Tom G)", "l": "https://www.youtube.com/watch?v=k7tGP-vidwc", "v": "https://drive.google.com/drive/folders/1Qg63sEUH15lFeiZlvDe5G9QZhsAKPv5g", "c": ""}];
+
+let dados={pessoas:[],semanas:[],musicas:[]};
+let estado={semanaAtiva:null,eu:null,filtroCat:'',editandoId:null,filtroDomingo:'prox',filtroRep:'',verArquivo:false};
+
+let _aplicandoRemoto=false; // evita eco ao receber atualização em tempo real
+async function salvar(){
+  if(!window.__FIREBASE_OK__){return;} // sem config, não persiste
+  if(_aplicandoRemoto){return;}
+  try{await window.fbSalvar(JSON.stringify(dados));}
+  catch(e){console.error(e);toast('⚠️ Erro ao salvar');}
+}
+async function carregar(){
+  try{ if(window.__FIREBASE_OK__){ const p=await window.fbCarregar(); if(p)dados=JSON.parse(p); } }catch(e){console.error(e);}
+  if(!dados.pessoas||dados.pessoas.length===0){
+    dados.pessoas=PESSOAS_INICIAIS.map((p,i)=>({id:'p'+i+Date.now(),...p,convidado:false}));
+    dados.semanas=dados.semanas||[];dados.musicas=dados.musicas||[];
+    await salvar();
+  }
+  dados.semanas=dados.semanas||[];dados.musicas=dados.musicas||[];
+  if(dados.musicas.length===0 && typeof MUSICAS_INICIAIS!=='undefined'){
+    dados.musicas=MUSICAS_INICIAIS.map(m=>({id:id(),nome:m.n,solo:m.s||'',link:m.l||'',voz:m.v||'',cat:m.c||''}));
+    await salvar();
+  }
+  dados.semanas.forEach(s=>{if(!s.disp)s.disp={};if(!s.solistas)s.solistas={};});
+  // migração: corrige nome antigo Lorrain -> Lorran em dados já salvos
+  let _mig=false;
+  dados.pessoas.forEach(p=>{if(p.n==='Lorrain'){p.n='Lorran';_mig=true;}});
+  if(_mig)await salvar();
+  await gerarDomingosDoMes();
+  try{estado.eu=localStorage.getItem('louvor_eu')||null;}catch(e){}
+}
+// Abre automaticamente todos os domingos futuros do mês atual (e do próximo, quando o mês está acabando)
+async function gerarDomingosDoMes(){
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const hojeISO=hoje.toISOString().slice(0,10);
+  const alvos=[];
+  function domingosDoMes(ano,mes){ // mes 0-11
+    const out=[];const d=new Date(ano,mes,1);
+    while(d.getMonth()===mes){ if(d.getDay()===0){const iso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; out.push(iso);} d.setDate(d.getDate()+1); }
+    return out;
+  }
+  // mês atual
+  domingosDoMes(hoje.getFullYear(),hoje.getMonth()).forEach(iso=>{if(iso>=hojeISO)alvos.push(iso);});
+  // se restam poucos domingos no mês (<=1), já abre o próximo mês também
+  if(alvos.length<=1){
+    const prox=new Date(hoje.getFullYear(),hoje.getMonth()+1,1);
+    domingosDoMes(prox.getFullYear(),prox.getMonth()).forEach(iso=>{if(iso>=hojeISO)alvos.push(iso);});
+  }
+  let criou=false;
+  alvos.forEach(data=>{
+    if(!dados.semanas.some(s=>s.data===data)){
+      dados.semanas.push({id:id(),data,ministroId:'',ministroNome:'',vocais:[],instrumentos:{},musicas:[],disp:{},backvocal:'',solistas:{}});
+      criou=true;
+    }
+  });
+  if(criou){dados.semanas.sort((a,b)=>a.data.localeCompare(b.data));await salvar();}
+}
+
+function id(){return 'x'+Math.random().toString(36).slice(2,9);}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function fmtData(iso){if(!iso)return'';const dias=['dom','seg','ter','qua','qui','sex','sáb'];const dt=new Date(iso+'T12:00:00');const p=iso.split('-');return p[2]+'/'+p[1]+' ('+dias[dt.getDay()]+')';}
+function fmtDataLonga(iso){if(!iso)return'';const meses=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];const p=iso.split('-');return p[2]+' de '+meses[parseInt(p[1])-1];}
+function tipoLink(u){if(!u)return'';if(u.includes('drive.google')||u.includes('share.google'))return'drive';return'yt';}
+function nomeDe(pid){const p=dados.pessoas.find(x=>x.id===pid);return p?p.n:'';}
+function catBadge(cat){
+  if(!cat)return'';
+  const cls=cat.startsWith('Ceia')?'cat-Ceia':(cat==='Natal'?'cat-Natal':'cat-Animada');
+  const emoji=cat.startsWith('Ceia')?'🍇🍞':(cat==='Natal'?'🎄':'💃🕺');
+  return `<span class="cat-badge ${cls}">${emoji} ${cat}</span>`;
+}
+function pedirConfirmacao(texto,onOk,rotulo){
+  document.getElementById('confTexto').textContent=texto;
+  const btn=document.getElementById('confBtn');
+  const novo=btn.cloneNode(true);btn.parentNode.replaceChild(novo,btn);
+  const rot=rotulo||'Excluir';
+  novo.textContent=rot;
+  const perigo=/excluir|remover|tirar/i.test(rot);
+  novo.className='btn '+(perigo?'btn-perigo':'btn-primario');novo.style.flex='1';
+  novo.addEventListener('click',async()=>{fecharModal('modalConfirmar');await onOk();});
+  abrirModal('modalConfirmar');
+}
+function setFiltro(c){
+  estado.filtroCat=c;
+  document.querySelectorAll('#filtroCats .filtro-cat').forEach(el=>el.classList.toggle('on',el.dataset.cat===c));
+  renderMusicas();
+}
+function setFiltroRep(c){
+  estado.filtroRep=c;
+  document.querySelectorAll('#filtroCatsRep .filtro-cat').forEach(el=>el.classList.toggle('on',el.dataset.cat===c));
+  renderEscolhaMusicas();
+}
+function setFiltroDomingo(f){
+  estado.filtroDomingo=f;
+  document.querySelectorAll('#filtroDomingos .filtro-cat').forEach(el=>el.classList.toggle('on',el.dataset.fd===f));
+  renderSemanas();
+}
+function toggleArquivo(){
+  estado.verArquivo=!estado.verArquivo;
+  document.getElementById('btnArquivo').textContent=estado.verArquivo?'🗄️ Ocultar domingos passados':'🗄️ Ver domingos passados';
+  renderArquivo();
+}
+// selos de status da escala/repertório
+function statusEscala(s){
+  const temMin=!!s.ministroId;
+  const temVoc=(s.vocais||[]).length>0;
+  if(temMin&&temVoc)return{cls:'selo-ok',txt:'Escala ✅'};
+  if(temMin||temVoc)return{cls:'selo-pend',txt:'Escala ⏳'};
+  return{cls:'selo-vazio',txt:'Escala —'};
+}
+function statusRepertorio(s){
+  const n=(s.musicas||[]).length;
+  if(n>0)return{cls:'selo-ok',txt:'Repertório ✅ ('+n+')'};
+  return{cls:'selo-vazio',txt:'Repertório —'};
+}
+function proximoDomingoData(){
+  const hoje=new Date().toISOString().slice(0,10);
+  const fut=dados.semanas.filter(s=>s.data>=hoje).map(s=>s.data).sort();
+  return fut.length?fut[0]:null;
+}
+function meuProximoDomingoId(){
+  // próximo domingo (a partir de hoje) em que EU estou escalado (vocal/instrumento/ministro) ou, se nada, o próximo geral
+  const hoje=new Date().toISOString().slice(0,10);
+  const fut=dados.semanas.filter(s=>s.data>=hoje).sort((a,b)=>a.data.localeCompare(b.data));
+  if(estado.eu){
+    const meu=fut.find(s=>estaEscalado(s,estado.eu));
+    if(meu)return meu.id;
+  }
+  return fut.length?fut[0].id:null;
+}
+function estaEscalado(s,pid){
+  if(s.ministroId===pid)return true;
+  if((s.vocais||[]).includes(pid))return true;
+  for(const f of FUNCOES_INSTR){if((s.instrumentos[f]||[]).includes(pid))return true;}
+  return false;
+}
+
+function trocarAba(nome,btn){
+  document.querySelectorAll('.painel').forEach(p=>p.classList.remove('ativo'));
+  document.querySelectorAll('.aba').forEach(a=>a.classList.remove('ativa'));
+  document.getElementById('painel-'+nome).classList.add('ativo');
+  btn.classList.add('ativa');
+}
+
+// EU
+function popularSouEu(){
+  const sel=document.getElementById('souEu');
+  const lista=dados.pessoas.slice().sort((a,b)=>a.n.localeCompare(b.n));
+  sel.innerHTML='<option value="">Selecione seu nome</option>'+lista.map(p=>`<option value="${p.id}">${p.n}</option>`).join('');
+  if(estado.eu)sel.value=estado.eu;
+}
+function atualizarAlertaEu(){
+  const box=document.getElementById('quemsouBox');
+  if(box)box.classList.toggle('alerta-eu',!estado.eu);
+}
+function mudarEu(){
+  estado.eu=document.getElementById('souEu').value||null;
+  try{localStorage.setItem('louvor_eu',estado.eu||'');}catch(e){}
+  atualizarAlertaEu();renderDisp();renderSemanas();
+}
+
+// PESSOAS
+function popularSelectMinistros(val){
+  const ministros=dados.pessoas.filter(p=>p.f==='Ministro').sort((a,b)=>a.n.localeCompare(b.n));
+  return '<option value="">— sem ministro ainda —</option>'+ministros.map(p=>`<option value="${p.id}" ${p.id===val?'selected':''}>${p.n}</option>`).join('');
+}
+async function addPessoa(){
+  const n=document.getElementById('pNome').value.trim();
+  const f=document.getElementById('pFuncao').value;
+  const c=document.getElementById('pConvidado').checked;
+  if(!n){toast('Digite o nome');return;}
+  dados.pessoas.push({id:id(),n,f,convidado:c});
+  document.getElementById('pNome').value='';document.getElementById('pConvidado').checked=false;
+  await salvar();renderPessoas();popularSouEu();toast('✅ '+n+' adicionado');
+}
+function removerPessoa(pid){
+  const p=dados.pessoas.find(x=>x.id===pid);
+  pedirConfirmacao('Remover '+p.n+' da equipe?',async()=>{
+    dados.pessoas=dados.pessoas.filter(x=>x.id!==pid);
+    await salvar();renderPessoas();popularSouEu();toast('Removido');
+  },'Remover');
+}
+function renderPessoas(){
+  const cont=document.getElementById('listaPessoas');
+  const grupos={Ministro:'👑 Ministros',Vocal:'🎤 Vocais',Teclado:'🎹 Teclado',Violão:'🎸 Violão',Baixo:'🎸 Baixo',Bateria:'🥁 Bateria',Guitarra:'🎸 Guitarra',Sopro:'🎷 Sopro'};
+  let html='';
+  Object.keys(grupos).forEach(g=>{
+    const lista=dados.pessoas.filter(p=>p.f===g);
+    if(!lista.length)return;
+    html+=`<div class="card"><h3>${grupos[g]} <span class="sub">(${lista.length})</span></h3>`;
+    html+=lista.map(p=>`<span class="pill">${p.convidado?'✨ ':''}${p.n}<button onclick="removerPessoa('${p.id}')" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;opacity:.6">×</button></span>`).join('');
+    html+='</div>';
+  });
+  cont.innerHTML=html;
+}
+
+// DISPONIBILIDADE
+async function abrirDomingo(){
+  const data=document.getElementById('novaDataDisp').value;
+  if(!data){toast('Escolha a data');return;}
+  const hoje=new Date().toISOString().slice(0,10);
+  if(data<hoje){toast('⚠️ Não dá para abrir um domingo no passado');return;}
+  if(dados.semanas.some(s=>s.data===data)){toast('Esse domingo já está aberto');return;}
+  dados.semanas.push({id:id(),data,ministroId:'',ministroNome:'',vocais:[],instrumentos:{},musicas:[],disp:{},backvocal:'',solistas:{}});
+  dados.semanas.sort((a,b)=>a.data.localeCompare(b.data));
+  document.getElementById('novaDataDisp').value='';
+  await salvar();renderDisp();renderSemanas();toast('✅ Domingo aberto');
+}
+async function marcarDisp(sid,valor){
+  if(!estado.eu){toast('Selecione seu nome no topo primeiro');return;}
+  const s=dados.semanas.find(x=>x.id===sid);
+  if(s.disp[estado.eu]===valor)delete s.disp[estado.eu];
+  else s.disp[estado.eu]=valor;
+  await salvar();renderDisp();renderSemanas();
+}
+function renderDisp(){
+  const cont=document.getElementById('listaDisp');
+  const hoje=new Date().toISOString().slice(0,10);
+  const futuras=dados.semanas.filter(s=>s.data>=hoje);
+  if(futuras.length===0){cont.innerHTML='<div class="vazio-estado">Nenhum domingo aberto.<br>Abra um abaixo ☟</div>';return;}
+  cont.innerHTML=futuras.map(s=>{
+    const meuStatus=estado.eu?s.disp[estado.eu]:null;
+    const podem=Object.keys(s.disp).filter(k=>s.disp[k]==='sim');
+    const nomesPodem=podem.map(nomeDe).filter(Boolean).sort();
+    return `<div class="disp-domingo ${meuStatus==='sim'?'eu-posso':''}">
+      <div class="disp-linha">
+        <b>📅 ${fmtData(s.data)}</b>
+        <div class="toggle-disp">
+          <button class="btn-toggle ${meuStatus==='sim'?'sim-on':''}" onclick="marcarDisp('${s.id}','sim')">✅ Posso</button>
+          <button class="btn-toggle ${meuStatus==='nao'?'nao-on':''}" onclick="marcarDisp('${s.id}','nao')">❌ Não</button>
+        </div>
+      </div>
+      <div class="disp-contagem">👥 ${podem.length} disponíveis</div>
+      ${nomesPodem.length?`<div class="disp-nomes">${nomesPodem.join(' · ')}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ESCALA
+async function definirMinistro(sid,mid){
+  const s=dados.semanas.find(x=>x.id===sid);
+  const antigo=s.ministroId;
+  if(antigo&&s.vocais.includes(antigo))s.vocais=s.vocais.filter(x=>x!==antigo);
+  s.ministroId=mid;s.ministroNome=mid?nomeDe(mid):'';
+  if(mid&&!s.vocais.includes(mid)&&s.vocais.length<MAX_MICROFONES)s.vocais.unshift(mid);
+  await salvar();renderModalMontar();renderSemanas();
+}
+function removerSemana(sid){
+  const s=dados.semanas.find(x=>x.id===sid);
+  pedirConfirmacao('Excluir o domingo '+fmtData(s.data)+' por completo (disponibilidades, escala e repertório)?',async()=>{
+    dados.semanas=dados.semanas.filter(x=>x.id!==sid);
+    await salvar();renderSemanas();renderDisp();toast('Domingo excluído');
+  });
+}
+function cardSemana(s,ehProximo){
+  const nVoc=s.vocais.length;
+  const contClass=nVoc>=MAX_MICROFONES?'cont-cheio':'cont-ok';
+  const disponiveis=Object.keys(s.disp).filter(k=>s.disp[k]==='sim');
+  const nomesDisp=disponiveis.map(nomeDe).filter(Boolean).sort();
+  const vocaisHtml=s.vocais.map(vid=>{const isMin=vid===s.ministroId;return `<span class="pill">${isMin?'👑 ':''}${nomeDe(vid)}</span>`;}).join('')||'<span class="vazio">— sem vocais —</span>';
+  let instrHtml='';
+  FUNCOES_INSTR.forEach(f=>{
+    const nomes=(s.instrumentos[f]||[]).map(nomeDe).filter(Boolean);
+    instrHtml+=`<div class="lista-vaga"><span class="funcao">${f}</span><span class="nome-pessoa">${nomes.length?nomes.join(', '):'<span class="vazio">—</span>'}</span></div>`;
+  });
+  const se=statusEscala(s), sr=statusRepertorio(s);
+  return `<div class="card semana ${ehProximo?'proximo':''}">
+    <div class="semana-topo">
+      <span class="data-badge">📅 ${fmtData(s.data)}</span>
+      ${ehProximo?'<span class="tag-proximo">PRÓXIMO CULTO</span>':''}
+      ${s.ministroNome?`<span class="ministro-tag">👑 ${s.ministroNome}</span>`:'<span class="ministro-vazio">sem ministro</span>'}
+      <span class="contador ${contClass}">🎤 ${nVoc}/${MAX_MICROFONES}</span>
+    </div>
+    <div class="selos">
+      <span class="selo ${se.cls}">${se.txt}</span>
+      <span class="selo ${sr.cls}">${sr.txt}</span>
+    </div>
+    <details style="margin-top:6px"><summary>👥 ${disponiveis.length} se disponibilizaram${nomesDisp.length?' — ver quem':''}</summary>${nomesDisp.length?`<div class="disp-nomes-escala">${nomesDisp.join(' · ')}</div>`:'<div class="sub">Ninguém marcou ainda.</div>'}</details>
+    <div class="divisor"></div>
+    <div class="sub" style="font-weight:600;margin-bottom:4px">Vocais</div>
+    <div>${vocaisHtml}</div>
+    ${s.backvocal?`<div class="sub" style="margin-top:6px">🎚️ Back vocal: <b>${s.backvocal}</b></div>`:''}
+    <details style="margin-top:8px"><summary>Ver instrumentos</summary>${instrHtml}</details>
+    <div class="divisor"></div>
+    <div class="sub" style="font-weight:600;margin-bottom:6px">🎵 Repertório (${s.musicas.length})</div>
+    ${renderMusicasSemana(s)}
+    <div class="divisor"></div>
+    <div class="grupo-btns">
+      <div class="rotulo-grupo">1. Montar</div>
+      <div class="linha-btns">
+        <button class="btn btn-secundario btn-mini" onclick="abrirMontar('${s.id}')">✏️ Montar escala</button>
+        <button class="btn btn-secundario btn-mini" onclick="abrirRepertorio('${s.id}')">🎵 ${s.musicas.length?'Editar repertório':'Montar repertório'}</button>
+      </div>
+    </div>
+    <div class="grupo-btns">
+      <div class="rotulo-grupo">2. Compartilhar</div>
+      <div class="linha-btns">
+        <button class="btn btn-verde btn-mini" onclick="resumoEscala('${s.id}')">📲 Copiar escala</button>
+        <button class="btn btn-verde btn-mini" onclick="resumoMusicas('${s.id}')">🎶 Copiar músicas</button>
+      </div>
+    </div>
+    <div class="linha-btns" style="margin-top:10px">
+      <button class="btn btn-perigo btn-mini" onclick="removerSemana('${s.id}')">🗑️ Excluir domingo</button>
+    </div>
+  </div>`;
+}
+function renderSemanas(){
+  const cont=document.getElementById('listaSemanas');
+  const semDom=document.getElementById('semDomingos');
+  const hoje=new Date().toISOString().slice(0,10);
+  const futuras=dados.semanas.filter(s=>s.data>=hoje).sort((a,b)=>a.data.localeCompare(b.data));
+  const proxId=meuProximoDomingoId();
+  const proxGeral=proximoDomingoData();
+  if(futuras.length===0){cont.innerHTML='';semDom.style.display='block';}
+  else{
+    semDom.style.display='none';
+    let lista=futuras;
+    if(estado.filtroDomingo==='prox'){lista=futuras.filter(s=>s.id===proxId);}
+    cont.innerHTML=lista.map(s=>cardSemana(s,s.data===proxGeral)).join('')
+      ||'<div class="card vazio-estado">Nada para mostrar neste filtro.</div>';
+  }
+  renderArquivo();
+}
+function renderArquivo(){
+  const cont=document.getElementById('listaArquivo');
+  const btn=document.getElementById('btnArquivo');
+  const hoje=new Date().toISOString().slice(0,10);
+  const passadas=dados.semanas.filter(s=>s.data<hoje).sort((a,b)=>b.data.localeCompare(a.data));
+  if(passadas.length===0){btn.style.display='none';cont.innerHTML='';return;}
+  btn.style.display='';
+  btn.textContent=estado.verArquivo?'🗄️ Ocultar domingos passados ('+passadas.length+')':'🗄️ Ver domingos passados ('+passadas.length+')';
+  cont.innerHTML=estado.verArquivo?passadas.map(s=>cardSemana(s,false)).join(''):'';
+}
+function renderMusicasSemana(s){
+  if(s.musicas.length===0)return'<div class="sub" style="opacity:.7">Nenhuma música escolhida.</div>';
+  return s.musicas.map(mid=>{
+    const m=dados.musicas.find(x=>x.id===mid);if(!m)return'';
+    const sol=textoSolista(s,mid);
+    return `<div class="musica-item" style="margin-bottom:6px">
+      <div class="musica-topo"><span class="musica-nome">${m.nome}${catBadge(m.cat)}</span></div>
+      ${sol?`<div class="sub">🎤 ${sol}</div>`:(m.solo?`<div class="sub" style="opacity:.7">💡 ${m.solo}</div>`:'')}
+      <div class="musica-links">
+        ${m.link?`<a class="link-tag link-yt" href="${m.link}" target="_blank">▶️ Música</a>`:''}
+        ${m.voz?`<a class="link-tag ${tipoLink(m.voz)==='drive'?'link-drive':'link-voz'}" href="${m.voz}" target="_blank">🎼 Divisão vocal</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// MODAL MONTAR
+function abrirMontar(sid){
+  estado.semanaAtiva=sid;
+  const s=dados.semanas.find(x=>x.id===sid);
+  document.getElementById('modalSub').textContent=fmtData(s.data);
+  renderModalMontar();abrirModal('modalEscala');
+}
+function ordenarPorDisp(lista,s){
+  return lista.slice().sort((a,b)=>{
+    const da=s.disp[a.id]==='sim'?0:s.disp[a.id]==='nao'?2:1;
+    const db=s.disp[b.id]==='sim'?0:s.disp[b.id]==='nao'?2:1;
+    return da-db||a.n.localeCompare(b.n);
+  });
+}
+function chipPessoa(p,sel,disp,onclick){
+  let cls='chip';
+  if(sel)cls+=' sel';
+  else if(disp==='nao')cls+=' indisp';
+  else if(disp==='sim')cls+=' disp-livre';
+  const marca=disp==='sim'?'✅ ':(disp==='nao'?'❌ ':'');
+  return `<div class="${cls}" onclick="${onclick}">${marca}${p.n}</div>`;
+}
+function renderModalMontar(){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  const nVoc=s.vocais.length;
+  let html='';
+  html+=`<h3>👑 Ministro do dia</h3>
+    <select onchange="definirMinistro('${s.id}',this.value)">${popularSelectMinistros(s.ministroId)}</select>
+    <p class="sub" style="margin-top:4px">Só ministros aparecem aqui. Ele entra automaticamente como vocal.</p>`;
+  html+='<div class="divisor"></div>';
+  html+=`<h3>🎤 Vocais <span class="contador ${nVoc>=MAX_MICROFONES?'cont-cheio':'cont-ok'}">${nVoc}/${MAX_MICROFONES} microfones</span></h3>
+    <p class="sub">✅ verde = se disponibilizou · ❌ = disse que não pode · toque para escalar.</p><div class="chips">`;
+  ordenarPorDisp(dados.pessoas.filter(p=>p.f==='Ministro'||p.f==='Vocal'),s).forEach(p=>{
+    html+=chipPessoa(p,s.vocais.includes(p.id),s.disp[p.id],`toggleVocal('${p.id}')`);
+  });
+  html+='</div>';
+  html+=`<label>🎚️ Back vocal (opcional)</label>
+    <input type="text" value="${(s.backvocal||'').replace(/"/g,'&quot;')}" placeholder="Ex: Anaísa e Laís" onchange="setBack('${s.id}',this.value)">`;
+  html+='<div class="divisor"></div>';
+  html+='<h3>🎸 Instrumentos</h3><p class="sub">Não ocupam microfone.</p>';
+  FUNCOES_INSTR.forEach(f=>{
+    const disp=dados.pessoas.filter(p=>p.f===f);
+    if(!disp.length)return;
+    const arr=s.instrumentos[f]||[];
+    html+=`<div style="margin:10px 0"><div class="sub" style="font-weight:700;color:var(--texto)">${f}</div><div class="chips">`;
+    ordenarPorDisp(disp,s).forEach(p=>{html+=chipPessoa(p,arr.includes(p.id),s.disp[p.id],`toggleInstr('${f}','${p.id}')`);});
+    html+='</div></div>';
+  });
+  document.getElementById('modalCorpo').innerHTML=html;
+}
+async function setBack(sid,v){const s=dados.semanas.find(x=>x.id===sid);s.backvocal=v.trim();await salvar();renderSemanas();}
+async function toggleVocal(pid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(pid===s.ministroId){toast('O ministro não sai daqui. Troque o ministro acima.');return;}
+  if(s.vocais.includes(pid))s.vocais=s.vocais.filter(x=>x!==pid);
+  else{if(s.vocais.length>=MAX_MICROFONES){toast('⚠️ Já são 6 microfones');return;}s.vocais.push(pid);}
+  await salvar();renderModalMontar();renderSemanas();
+}
+async function toggleInstr(f,pid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(!s.instrumentos[f])s.instrumentos[f]=[];
+  if(s.instrumentos[f].includes(pid))s.instrumentos[f]=s.instrumentos[f].filter(x=>x!==pid);
+  else s.instrumentos[f].push(pid);
+  await salvar();renderModalMontar();renderSemanas();
+}
+
+// MODAL REPERTÓRIO
+function abrirRepertorio(sid){
+  estado.semanaAtiva=sid;
+  const s=dados.semanas.find(x=>x.id===sid);
+  if(!s.solistas)s.solistas={};
+  document.getElementById('repSub').textContent=fmtData(s.data)+(s.ministroNome?' · '+s.ministroNome:'');
+  document.getElementById('buscaRep').value='';
+  estado.filtroRep='';
+  document.querySelectorAll('#filtroCatsRep .filtro-cat').forEach(el=>el.classList.toggle('on',el.dataset.cat===''));
+  document.getElementById('repPasso1').style.display='';
+  document.getElementById('repPasso2').style.display='none';
+  renderEscolhaMusicas();abrirModal('modalRepertorio');
+}
+function editarSolistas(sid){
+  estado.semanaAtiva=sid;
+  const s=dados.semanas.find(x=>x.id===sid);
+  if(!s.solistas)s.solistas={};
+  document.getElementById('repSub').textContent=fmtData(s.data)+(s.ministroNome?' · '+s.ministroNome:'');
+  document.getElementById('repPasso1').style.display='none';
+  document.getElementById('repPasso2').style.display='';
+  document.getElementById('repSub2').textContent=fmtData(s.data)+' · '+s.musicas.length+' música(s)';
+  renderSolistas();abrirModal('modalRepertorio');
+}
+function avancarSolistas(){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(s.musicas.length===0){toast('Escolha ao menos uma música');return;}
+  document.getElementById('repPasso1').style.display='none';
+  document.getElementById('repPasso2').style.display='';
+  document.getElementById('repSub2').textContent=fmtData(s.data)+' · '+s.musicas.length+' música(s)';
+  renderSolistas();
+}
+function voltarMusicas(){
+  document.getElementById('repPasso2').style.display='none';
+  document.getElementById('repPasso1').style.display='';
+  renderEscolhaMusicas();
+}
+function renderSolistas(){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(!s.solistas)s.solistas={};
+  const cont=document.getElementById('listaSolistas');
+  // vocais escalados para esse domingo (ministro + vocais). fallback: todos os vocais/ministros
+  let vocais=s.vocais.map(vid=>dados.pessoas.find(p=>p.id===vid)).filter(Boolean);
+  if(vocais.length===0)vocais=dados.pessoas.filter(p=>p.f==='Ministro'||p.f==='Vocal').sort((a,b)=>a.n.localeCompare(b.n));
+  cont.innerHTML=s.musicas.map(mid=>{
+    const m=dados.musicas.find(x=>x.id===mid);if(!m)return'';
+    const sel=s.solistas[mid]||{uni:false,ids:[]};
+    let chips=`<div class="chip ${sel.uni?'sel':''}" onclick="toggleUnissono('${mid}')">🎼 Uníssono</div>`;
+    vocais.forEach(p=>{
+      const on=!sel.uni && sel.ids.includes(p.id);
+      chips+=`<div class="chip ${on?'sel':''} ${sel.uni?'indisp':''}" onclick="toggleSolista('${mid}','${p.id}')">${p.id===s.ministroId?'👑 ':''}${p.n}</div>`;
+    });
+    return `<div class="card" style="box-shadow:none;padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+        <div style="font-weight:600;font-size:.92rem">${m.nome}${catBadge(m.cat)}</div>
+        <button class="btn btn-perigo btn-mini" style="flex-shrink:0" onclick="removerMusicaDomingo('${mid}')">🗑️ Tirar</button>
+      </div>
+      ${m.solo?`<div class="sub" style="margin-bottom:6px">💡 Sugestão do repositório: ${m.solo}</div>`:''}
+      <div class="chips">${chips}</div>
+    </div>`;
+  }).join('')||'<div class="vazio-estado">Nenhuma música no repertório. Volte e escolha músicas.</div>';
+}
+function removerMusicaDomingo(mid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  const m=dados.musicas.find(x=>x.id===mid);
+  pedirConfirmacao('Tirar "'+(m?m.nome:'esta música')+'" do repertório deste domingo? (ela continua no repositório geral)',async()=>{
+    s.musicas=(s.musicas||[]).filter(x=>x!==mid);
+    if(s.solistas)delete s.solistas[mid];
+    await salvar();
+    if(s.musicas.length===0){fecharModal('modalRepertorio');}
+    else{renderSolistas();}
+    renderSemanas();toast('Música removida do domingo');
+  },'Tirar');
+}
+async function toggleUnissono(mid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(!s.solistas[mid])s.solistas[mid]={uni:false,ids:[]};
+  s.solistas[mid].uni=!s.solistas[mid].uni;
+  if(s.solistas[mid].uni)s.solistas[mid].ids=[];
+  await salvar();renderSolistas();renderSemanas();
+}
+async function toggleSolista(mid,pid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(!s.solistas[mid])s.solistas[mid]={uni:false,ids:[]};
+  const o=s.solistas[mid];
+  if(o.uni)o.uni=false;
+  if(o.ids.includes(pid))o.ids=o.ids.filter(x=>x!==pid);
+  else o.ids.push(pid);
+  await salvar();renderSolistas();renderSemanas();
+}
+function textoSolista(s,mid){
+  const o=s.solistas&&s.solistas[mid];
+  if(!o)return'';
+  if(o.uni)return'Uníssono';
+  const nomes=(o.ids||[]).map(nomeDe).filter(Boolean);
+  return nomes.join(', ');
+}
+function renderEscolhaMusicas(){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  const termo=document.getElementById('buscaRep').value.toLowerCase();
+  const cont=document.getElementById('escolhaMusicas');
+  const contadorEl=document.getElementById('contadorSelRep');
+  if(contadorEl)contadorEl.textContent='✅ '+s.musicas.length+' música(s) selecionada(s)';
+  let lista=dados.musicas.slice().sort((a,b)=>a.nome.localeCompare(b.nome));
+  if(estado.filtroRep)lista=lista.filter(m=>(m.cat||'')===estado.filtroRep);
+  if(termo)lista=lista.filter(m=>m.nome.toLowerCase().includes(termo));
+  if(dados.musicas.length===0){cont.innerHTML='<div class="vazio-estado">Repositório vazio. Adicione músicas na aba 🎵 Repertório.</div>';return;}
+  if(lista.length===0){cont.innerHTML='<div class="vazio-estado">Nada encontrado neste filtro.</div>';return;}
+  cont.innerHTML=lista.map(m=>{
+    const sel=s.musicas.includes(m.id);
+    return `<div class="chip ${sel?'sel':''}" style="display:block;margin-bottom:6px" onclick="toggleMusicaSemana('${m.id}')">${sel?'✅ ':''}${m.nome}${catBadge(m.cat)}${m.solo?` · <span style="opacity:.7">${m.solo}</span>`:''}</div>`;
+  }).join('');
+}
+async function toggleMusicaSemana(mid){
+  const s=dados.semanas.find(x=>x.id===estado.semanaAtiva);
+  if(s.musicas.includes(mid))s.musicas=s.musicas.filter(x=>x!==mid);else s.musicas.push(mid);
+  await salvar();renderEscolhaMusicas();renderSemanas();
+}
+
+// MÚSICAS
+async function addMusica(){
+  const nome=document.getElementById('mNome').value.trim();
+  const link=document.getElementById('mLink').value.trim();
+  const voz=document.getElementById('mVoz').value.trim();
+  const solo=document.getElementById('mSolo').value.trim();
+  const cat=document.getElementById('mCat').value;
+  if(!nome){toast('Digite o nome da música');return;}
+  dados.musicas.push({id:id(),nome,link,voz,solo,cat});
+  ['mNome','mLink','mVoz','mSolo'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('mCat').value='';
+  await salvar();renderMusicas();toast('✅ Música salva');
+}
+function abrirEditar(mid){
+  const m=dados.musicas.find(x=>x.id===mid);if(!m)return;
+  estado.editandoId=mid;
+  document.getElementById('eNome').value=m.nome||'';
+  document.getElementById('eLink').value=m.link||'';
+  document.getElementById('eVoz').value=m.voz||'';
+  document.getElementById('eSolo').value=m.solo||'';
+  document.getElementById('eCat').value=m.cat||'';
+  abrirModal('modalEditar');
+}
+async function salvarEdicao(){
+  const m=dados.musicas.find(x=>x.id===estado.editandoId);if(!m)return;
+  const nome=document.getElementById('eNome').value.trim();
+  if(!nome){toast('Digite o nome da música');return;}
+  m.nome=nome;
+  m.link=document.getElementById('eLink').value.trim();
+  m.voz=document.getElementById('eVoz').value.trim();
+  m.solo=document.getElementById('eSolo').value.trim();
+  m.cat=document.getElementById('eCat').value;
+  await salvar();renderMusicas();renderSemanas();fecharModal('modalEditar');toast('✅ Música atualizada');
+}
+function removerMusica(mid){
+  const m=dados.musicas.find(x=>x.id===mid);
+  pedirConfirmacao('Remover a música "'+m.nome+'" do repositório?',async()=>{
+    dados.musicas=dados.musicas.filter(x=>x.id!==mid);
+    dados.semanas.forEach(s=>{s.musicas=(s.musicas||[]).filter(x=>x!==mid); if(s.solistas)delete s.solistas[mid];});
+    await salvar();renderMusicas();renderSemanas();toast('Música removida');
+  },'Remover');
+}
+function renderMusicas(){
+  const cont=document.getElementById('listaMusicas');
+  const termo=(document.getElementById('buscaMusica').value||'').toLowerCase();
+  let lista=dados.musicas.slice().sort((a,b)=>a.nome.localeCompare(b.nome));
+  if(estado.filtroCat)lista=lista.filter(m=>(m.cat||'')===estado.filtroCat);
+  if(termo)lista=lista.filter(m=>m.nome.toLowerCase().includes(termo));
+  document.getElementById('contMusicas').textContent='('+lista.length+(estado.filtroCat||termo?' de '+dados.musicas.length:'')+')';
+  if(lista.length===0){cont.innerHTML='<div class="vazio-estado">'+(dados.musicas.length===0?'Nenhuma música ainda.':'Nada encontrado.')+'</div>';return;}
+  cont.innerHTML=lista.map(m=>`<div class="musica-item">
+    <div class="musica-topo"><span class="musica-nome">${m.nome}${catBadge(m.cat)}${m.solo?` <span class="sub">· ${m.solo}</span>`:''}</span>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn btn-secundario btn-mini" onclick="abrirEditar('${m.id}')">✏️</button>
+        <button class="btn btn-perigo btn-mini" onclick="removerMusica('${m.id}')">🗑️</button>
+      </div></div>
+    <div class="musica-links">
+      ${m.link?`<a class="link-tag link-yt" href="${m.link}" target="_blank">▶️ Música</a>`:'<span class="sub">sem link</span>'}
+      ${m.voz?`<a class="link-tag ${tipoLink(m.voz)==='drive'?'link-drive':'link-voz'}" href="${m.voz}" target="_blank">🎼 Divisão vocal</a>`:''}
+    </div></div>`).join('');
+}
+
+// RESUMO WHATSAPP
+function resumoEscala(sid){
+  const s=dados.semanas.find(x=>x.id===sid);
+  const faltas=[];
+  if(!s.ministroId)faltas.push('sem ministro');
+  if(!s.vocais.length)faltas.push('sem vocais');
+  if(faltas.length){
+    pedirConfirmacao('A escala de '+fmtData(s.data)+' está incompleta ('+faltas.join(', ')+'). Copiar mesmo assim?',()=>montarResumoEscala(sid),'Copiar assim');
+    return;
+  }
+  montarResumoEscala(sid);
+}
+function montarResumoEscala(sid){
+  const s=dados.semanas.find(x=>x.id===sid);
+  let t=`🎵 *ESCALA DO LOUVOR* 🎵\n📅 Domingo, ${fmtDataLonga(s.data)}\n`;
+  t+=`\n👑 *Ministro:* ${s.ministroNome||'a definir'}\n`;
+  t+=`\n🎤 *Vocais* (${s.vocais.length}/6):\n`;
+  if(s.vocais.length)s.vocais.forEach(vid=>{t+=`• ${nomeDe(vid)}${vid===s.ministroId?' (ministro)':''}\n`;});
+  else t+='• a definir\n';
+  if(s.backvocal)t+=`\n🎚️ *Back vocal:* ${s.backvocal}\n`;
+  let temInstr=false;
+  FUNCOES_INSTR.forEach(f=>{if((s.instrumentos[f]||[]).length)temInstr=true;});
+  if(temInstr){
+    t+=`\n🎸 *Instrumentos:*\n`;
+    FUNCOES_INSTR.forEach(f=>{
+      const arr=(s.instrumentos[f]||[]).map(nomeDe).filter(Boolean);
+      if(arr.length)t+=`• ${f}: ${arr.join(', ')}\n`;
+    });
+  }
+  abrirResumo(t);
+}
+function resumoMusicas(sid){
+  const s=dados.semanas.find(x=>x.id===sid);
+  let t=`🎶 *REPERTÓRIO* 🎶\n📅 Domingo, ${fmtDataLonga(s.data)}`;
+  if(s.ministroNome)t+=`\n👑 Ministro: ${s.ministroNome}`;
+  t+=`\n`;
+  if(s.musicas.length){
+    s.musicas.forEach((mid,i)=>{
+      const m=dados.musicas.find(x=>x.id===mid);if(!m)return;
+      const sol=textoSolista(s,mid)||m.solo||'';
+      t+=`\n*${i+1}. ${m.nome}*${sol?` — ${sol}`:''}\n`;
+      if(m.link)t+=`▶️ ${m.link}\n`;
+      if(m.voz)t+=`🎼 Divisão: ${m.voz}\n`;
+    });
+  }else{
+    t+=`\n_Nenhuma música escolhida ainda._\n`;
+  }
+  t+=`\n🙏 Bora ensaiar!`;
+  abrirResumo(t);
+}
+function abrirResumo(t){
+  const el=document.getElementById('resumoTexto');
+  el.textContent=t;el._raw=t;
+  abrirModal('modalResumo');
+}
+function copiarResumo(){
+  const el=document.getElementById('resumoTexto');
+  const t=el._raw||el.textContent;
+  navigator.clipboard.writeText(t).then(()=>toast('📋 Copiado! Cole no WhatsApp')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');toast('📋 Copiado!');}catch(e){toast('Selecione e copie manual');}
+    document.body.removeChild(ta);
+  });
+}
+
+// MODAL util
+function abrirModal(m){document.getElementById(m).classList.add('aberto');document.body.style.overflow='hidden';}
+function fecharModal(m){document.getElementById(m).classList.remove('aberto');document.body.style.overflow='';}
+document.querySelectorAll('.modal-bg').forEach(bg=>{bg.addEventListener('click',e=>{if(e.target===bg)fecharModal(bg.id);});});
+
+// re-renderiza tudo (usado no boot e nas atualizações em tempo real)
+function renderTudo(){
+  popularSouEu();
+  atualizarAlertaEu();
+  renderDisp();
+  renderSemanas();
+  renderMusicas();
+  renderPessoas();
+}
+async function boot(){
+  if(!window.__FIREBASE_OK__){
+    document.getElementById('avisoConfig').style.display='block';
+  }
+  await carregar();
+  renderTudo();
+  // sincronização em tempo real: quando alguém edita, todos recebem
+  if(window.__FIREBASE_OK__ && window.fbOuvir){
+    window.fbOuvir((payload)=>{
+      try{
+        const remoto=JSON.parse(payload);
+        // aplica só se for diferente do que já temos (evita re-render desnecessário)
+        if(JSON.stringify(remoto)!==JSON.stringify(dados)){
+          _aplicandoRemoto=true;
+          dados=remoto;
+          dados.semanas=dados.semanas||[];dados.musicas=dados.musicas||[];dados.pessoas=dados.pessoas||[];
+          dados.semanas.forEach(s=>{if(!s.disp)s.disp={};if(!s.solistas)s.solistas={};});
+          renderTudo();
+          _aplicandoRemoto=false;
+        }
+      }catch(e){console.error(e);}
+    });
+  }
+}
+// INIT
+if(window.__FIREBASE_OK__!==undefined){ boot(); }
+else{ window.addEventListener('firebase-pronto',boot,{once:true}); setTimeout(()=>{ if(window.__FIREBASE_OK__===undefined){window.__FIREBASE_OK__=false; boot();} }, 1500); }
+</script>
+</body>
+</html>
